@@ -9,7 +9,7 @@ weakening the assertion or hardcoding the answer. **anticheat** catches it in th
 back to fix the real code, and keeps it out of your pull requests.
 
 [![npm](https://img.shields.io/npm/v/anticheat?color=cb3837&label=npm)](https://www.npmjs.com/package/anticheat)
-[![ci](https://github.com/journaltraces/anticheat/actions/workflows/ci.yml/badge.svg)](https://github.com/journaltraces/anticheat/actions/workflows/ci.yml)
+[![ci](https://github.com/DariusHQ/anticheat/actions/workflows/ci.yml/badge.svg)](https://github.com/DariusHQ/anticheat/actions/workflows/ci.yml)
 ![dependencies](https://img.shields.io/badge/dependencies-0-2ea44f)
 ![network](https://img.shields.io/badge/network-none-2ea44f)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
@@ -53,7 +53,7 @@ anticheat is the referee. It runs where the agent works and where you review, an
 **Claude Code** (plugin):
 
 ```
-/plugin marketplace add journaltraces/anticheat
+/plugin marketplace add DariusHQ/anticheat
 /plugin install anticheat@anticheat
 ```
 
@@ -68,7 +68,7 @@ npx anticheat install claude    # .claude/settings.json
 
 Add `--global` to protect every project on your machine.
 
-**Prevention, not just detection** (Agent Skill): [`skills/anticheat`](skills/anticheat/SKILL.md) teaches the agent the rules up front and has it run the self-check before it says "done". The Claude Code plugin includes it; for other agents use your skill manager, e.g. `npx skills add journaltraces/anticheat`.
+**Prevention, not just detection** (Agent Skill): [`skills/anticheat`](skills/anticheat/SKILL.md) teaches the agent the rules up front and has it run the self-check before it says "done". The Claude Code plugin includes it; for other agents use your skill manager, e.g. `npx skills add DariusHQ/anticheat`.
 
 **Any agent, any editor** (git pre-commit):
 
@@ -89,7 +89,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: journaltraces/anticheat@v1
+      - uses: DariusHQ/anticheat@v1
 ```
 
 Findings appear as annotations on the exact lines of the PR, plus a job summary.
@@ -218,7 +218,7 @@ We replayed the last 1,000 commits of the [Node.js](https://github.com/nodejs/no
 Anticheat-Allow: test-removed (the --jitless flag no longer exists)
 ```
 
-In pull request scans, the finding stays visible but is downgraded so it no longer fails the check. Found a false positive anyway? [Open an issue](https://github.com/journaltraces/anticheat/issues/new?template=false-positive.yml) with the diff.
+In pull request scans, the finding stays visible but is downgraded so it no longer fails the check. Found a false positive anyway? [Open an issue](https://github.com/DariusHQ/anticheat/issues/new?template=false-positive.yml) with the diff.
 
 **Why not just write "never skip tests" in CLAUDE.md?**
 Do that too. Instructions are suggestions; hooks are enforcement. The git hook and the Action are the backstop for every agent and every human.
@@ -235,15 +235,15 @@ Node 18+ and git. macOS, Linux and Windows.
 ## Show that your repo plays fair
 
 ```md
-[![anticheat](https://img.shields.io/badge/AI%20agents-anticheat%20protected-2ea44f)](https://github.com/journaltraces/anticheat)
+[![anticheat](https://img.shields.io/badge/AI%20agents-anticheat%20protected-2ea44f)](https://github.com/DariusHQ/anticheat)
 ```
 
-[![anticheat](https://img.shields.io/badge/AI%20agents-anticheat%20protected-2ea44f)](https://github.com/journaltraces/anticheat)
+[![anticheat](https://img.shields.io/badge/AI%20agents-anticheat%20protected-2ea44f)](https://github.com/DariusHQ/anticheat)
 
 ## Contributing
 
 Caught your agent cheating in a way anticheat missed? That is the most useful issue you can open:
-[paste the diff](https://github.com/journaltraces/anticheat/issues/new?template=new-cheat.yml). See [CONTRIBUTING.md](CONTRIBUTING.md) to add a rule.
+[paste the diff](https://github.com/DariusHQ/anticheat/issues/new?template=new-cheat.yml). See [CONTRIBUTING.md](CONTRIBUTING.md) to add a rule.
 
 ## License
 

@@ -1,8 +1,8 @@
 {
   "name": "anticheat",
   "owner": {
-    "name": "journaltraces",
-    "url": "https://github.com/journaltraces"
+    "name": "DariusHQ",
+    "url": "https://github.com/DariusHQ"
   },
   "description": "Anti-cheat for AI coding agents.",
   "plugins": [

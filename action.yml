@@ -1,6 +1,6 @@
 name: 'anticheat: AI agent test-gaming detector'
 description: 'Fail pull requests that skip, weaken or delete tests, hardcode answers, or switch CI checks off. Zero dependencies.'
-author: 'journaltraces'
+author: 'DariusHQ'
 branding:
   icon: 'shield'
   color: 'red'

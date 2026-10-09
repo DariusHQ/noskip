@@ -37,12 +37,12 @@
     "github-action",
     "hooks"
   ],
-  "author": "journaltraces",
+  "author": "DariusHQ",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/journaltraces/anticheat.git"
+    "url": "git+https://github.com/DariusHQ/anticheat.git"
   },
-  "homepage": "https://github.com/journaltraces/anticheat#readme",
-  "bugs": "https://github.com/journaltraces/anticheat/issues"
+  "homepage": "https://github.com/DariusHQ/anticheat#readme",
+  "bugs": "https://github.com/DariusHQ/anticheat/issues"
 }

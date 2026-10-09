@@ -4,7 +4,7 @@ import path from 'node:path';
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 
 export const VERSION = pkg.version;
-export const HOMEPAGE = String(pkg.homepage || 'https://github.com/journaltraces/anticheat').replace(/#.*$/, '');
+export const HOMEPAGE = String(pkg.homepage || 'https://github.com/DariusHQ/anticheat').replace(/#.*$/, '');
 
 export const SEVERITIES = ['low', 'medium', 'high'];
 
