@@ -69,7 +69,7 @@ const SCRIPT_NAMES = /(^|\/)(Makefile|makefile|GNUmakefile|justfile|Justfile|\.j
 
 const CONFIG_NAMES = /(^|\/)(tsconfig[^/]*\.json|jsconfig\.json|\.eslintrc(\.\w+)?|eslint\.config\.[cm]?[jt]s|biome\.jsonc?|\.oxlintrc\.json|mypy\.ini|\.mypy\.ini|pyproject\.toml|setup\.cfg|ruff\.toml|\.ruff\.toml|pyrightconfig\.json|\.golangci\.ya?ml|\.golangci\.toml|clippy\.toml|\.clippy\.toml|[^/]+\.csproj|Directory\.Build\.props|phpstan\.neon(\.dist)?|psalm\.xml(\.dist)?|\.rubocop\.ya?ml|\.swiftlint\.ya?ml|analysis_options\.yaml|(jest|vitest|vite|karma|playwright|cypress)\.config\.[cm]?[jt]s|jest\.config\.json|\.nycrc(\.\w+)?|\.c8rc(\.\w+)?|codecov\.ya?ml|\.codecov\.ya?ml|\.coveragerc|sonar-project\.properties|package\.json|pom\.xml|build\.gradle(\.kts)?|Cargo\.toml|phpunit\.xml(\.dist)?|\.mocharc(\.\w+)?|tox\.ini|pytest\.ini|conftest\.py|\.pre-commit-config\.ya?ml|deno\.jsonc?)$/;
 
-const GUARD_PATH = /(^|\/)(\.anticheat\.json|\.claude\/settings(\.local)?\.json|\.codex\/hooks\.json|\.codex\/config\.toml|\.gemini\/settings\.json|\.cursor\/hooks\.json|\.husky\/[^/]+|\.pre-commit-config\.ya?ml|\.?lefthook\.ya?ml)$/;
+const GUARD_PATH = /(^|\/)(\.noskip\.json|\.claude\/settings(\.local)?\.json|\.codex\/hooks\.json|\.codex\/config\.toml|\.gemini\/settings\.json|\.cursor\/hooks\.json|\.husky\/[^/]+|\.pre-commit-config\.ya?ml|\.?lefthook\.ya?ml)$/;
 
 const VENDORED = [
   /(^|\/)(node_modules|vendor|deps|bower_components|jspm_packages|third[_-]?party|external|extern|Pods|Carthage|\.venv|venv|\.tox|\.nox|__pycache__|\.mypy_cache|\.pytest_cache|\.next|\.nuxt|\.svelte-kit|\.output|\.turbo|\.vercel|dist|build|out|target|coverage|\.gradle|\.dart_tool|\.git)\//,

@@ -7,11 +7,11 @@ import { VERSION } from './util.js';
 
 export const TARGETS = ['claude', 'codex', 'gemini', 'cursor', 'git', 'github'];
 
-const OURS = /\banticheat\b/;
+const OURS = /\bnoskip\b/;
 const MAJOR = VERSION.split('.')[0];
 
 /**
- * How hooks should launch anticheat. A stable checkout or global install gets a direct
+ * How hooks should launch noskip. A stable checkout or global install gets a direct
  * `node <path>` call (fast); a throwaway npx cache falls back to `npx`.
  */
 export function defaultCommand() {
@@ -113,7 +113,7 @@ function agentEvents(target, cmd, remove = false) {
 
 const NOTES = {
   claude: 'Claude Code: active in new sessions. Tip: `/plugin` install is even simpler, see the README.',
-  codex: 'Codex: open `/hooks` once and trust the anticheat hooks (Codex skips untrusted hooks).',
+  codex: 'Codex: open `/hooks` once and trust the noskip hooks (Codex skips untrusted hooks).',
   gemini: 'Gemini CLI: active in new sessions.',
   cursor: 'Cursor: reload the window to pick up .cursor/hooks.json.',
 };
@@ -131,7 +131,7 @@ function installAgent(target, { root, global, command, remove }) {
   return { target, file, changed, note: remove ? undefined : NOTES[target] };
 }
 
-const GIT_MARK = '# anticheat: block commits that game the tests';
+const GIT_MARK = '# noskip: block commits that game the tests';
 
 function installGit({ root, command, remove }) {
   const husky = path.join(root, '.husky');
@@ -155,17 +155,17 @@ function installGit({ root, command, remove }) {
   } catch {
     /* Windows */
   }
-  const note = current && /^\s*exit\s+0\s*$/m.test(current) ? `Your existing hook has an \`exit 0\`; move the anticheat line above it.` : undefined;
+  const note = current && /^\s*exit\s+0\s*$/m.test(current) ? `Your existing hook has an \`exit 0\`; move the noskip line above it.` : undefined;
   return { target: 'git', file, changed: true, note };
 }
 
-export const WORKFLOW = `name: anticheat
+export const WORKFLOW = `name: noskip
 on:
   pull_request:
 permissions:
   contents: read
 jobs:
-  anticheat:
+  noskip:
     name: Catch test-gaming changes
     runs-on: ubuntu-latest
     steps:
@@ -180,7 +180,7 @@ jobs:
 `;
 
 function installGitHub({ root, remove }) {
-  const file = path.join(root, '.github', 'workflows', 'anticheat.yml');
+  const file = path.join(root, '.github', 'workflows', 'noskip.yml');
   if (remove) return { target: 'github', file, changed: false, note: `Delete ${file} by hand if you no longer want it.` };
   if (existsSync(file)) return { target: 'github', file, changed: false };
   mkdirSync(path.dirname(file), { recursive: true });

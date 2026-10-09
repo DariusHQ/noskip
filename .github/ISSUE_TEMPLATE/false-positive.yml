@@ -1,5 +1,5 @@
 name: False positive
-description: anticheat flagged a change that was legitimate.
+description: noskip flagged a change that was legitimate.
 title: "False positive: "
 labels: ["false-positive"]
 body:
@@ -13,7 +13,7 @@ body:
   - type: textarea
     id: output
     attributes:
-      label: anticheat output
+      label: noskip output
       render: text
   - type: textarea
     id: diff
@@ -25,5 +25,5 @@ body:
   - type: input
     id: version
     attributes:
-      label: anticheat version
+      label: noskip version
       placeholder: npx noskip --version

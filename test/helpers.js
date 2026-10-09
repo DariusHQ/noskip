@@ -25,7 +25,7 @@ export function commit(root, message = 'commit') {
 }
 
 export function makeRepo(files = {}) {
-  const root = mkdtempSync(path.join(os.tmpdir(), 'anticheat-test-'));
+  const root = mkdtempSync(path.join(os.tmpdir(), 'noskip-test-'));
   git(['init', '-q'], { cwd: root });
   git(['config', 'core.autocrlf', 'false'], { cwd: root });
   write(root, files);

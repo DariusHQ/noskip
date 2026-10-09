@@ -1,16 +1,16 @@
 # Contributing
 
-Two kinds of reports keep anticheat sharp:
+Two kinds of reports keep noskip sharp:
 
-- **A cheat it missed.** Paste the diff your agent produced ([template](https://github.com/DariusHQ/anticheat/issues/new?template=new-cheat.yml)).
-- **A false positive.** Paste the diff and the finding ([template](https://github.com/DariusHQ/anticheat/issues/new?template=false-positive.yml)).
+- **A cheat it missed.** Paste the diff your agent produced ([template](https://github.com/DariusHQ/noskip/issues/new?template=new-cheat.yml)).
+- **A false positive.** Paste the diff and the finding ([template](https://github.com/DariusHQ/noskip/issues/new?template=false-positive.yml)).
 
 Precision matters more than recall: a rule that cries wolf gets switched off.
 
 ## Development
 
 ```bash
-git clone https://github.com/DariusHQ/anticheat && cd anticheat
+git clone https://github.com/DariusHQ/noskip && cd noskip
 npm test                 # node:test, no dependencies to install
 node src/cli.js demo
 ```

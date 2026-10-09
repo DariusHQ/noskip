@@ -44,7 +44,7 @@ describe('stop hook', () => {
         const again = runHook(agent, 'stop', JSON.stringify({ ...id, stop_hook_active: true, loop_count: 1, status: 'completed' }));
         const second = json(again.stdout);
         assert.ok(!second.decision && !second.followup_message, again.stdout);
-        if (agent !== 'cursor') assert.match(second.systemMessage, /anticheat: 1 high/);
+        if (agent !== 'cursor') assert.match(second.systemMessage, /noskip: 1 high/);
       }));
   }
 
@@ -83,7 +83,7 @@ describe('stop hook', () => {
     }));
 
   test('outside a git repo, bad JSON or unknown events: fail open', () => {
-    const dir = mkdtempSync(path.join(os.tmpdir(), 'anticheat-nogit-'));
+    const dir = mkdtempSync(path.join(os.tmpdir(), 'noskip-nogit-'));
     try {
       assert.deepEqual(runHook('claude', 'stop', JSON.stringify({ cwd: dir })), { code: 0, stdout: '', stderr: '' });
       assert.equal(runHook('gemini', 'stop', '{not json').code, 0);
@@ -133,9 +133,9 @@ describe('command checks', () => {
     'rm -f .git/hooks/pre-commit',
     'rm -rf .husky',
     'chmod -x .husky/pre-commit',
-    'npx anticheat uninstall claude',
-    "sed -i 's/anticheat//' .claude/settings.json",
-    'echo {} > .anticheat.json',
+    'npx noskip uninstall claude',
+    "sed -i 's/noskip//' .claude/settings.json",
+    'echo {} > .noskip.json',
   ];
   for (const cmd of blocked) test(`blocks: ${cmd}`, () => assert.ok(checkCommand(cmd), cmd));
 
@@ -148,7 +148,7 @@ describe('command checks', () => {
     'cat .claude/settings.json',
     'cat .claude/settings.json > /tmp/backup.json',
     'ls .git/hooks',
-    'grep -rn anticheat .',
+    'grep -rn noskip .',
   ];
   for (const cmd of allowed) test(`allows: ${cmd}`, () => assert.equal(checkCommand(cmd), null, cmd));
 });

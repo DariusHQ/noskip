@@ -72,7 +72,7 @@ describe('cli', () => {
       commit(root, 'feature work');
       const res = run(['--base', 'HEAD~1', '--format', 'markdown'], root);
       assert.equal(res.code, 1);
-      assert.match(res.stdout, /### 🚨 anticheat: BUSTED/);
+      assert.match(res.stdout, /### 🚨 noskip: BUSTED/);
       assert.match(res.stdout, /`only-added`/);
     } finally {
       removeDir(root);
@@ -83,7 +83,7 @@ describe('cli', () => {
     const root = cheatingRepo();
     try {
       const gh = run(['--format', 'github'], root);
-      assert.match(gh.stdout, /^::error file=test\/add\.test\.js,line=1,title=anticheat\/skip-added::/m);
+      assert.match(gh.stdout, /^::error file=test\/add\.test\.js,line=1,title=noskip\/skip-added::/m);
       const sarif = JSON.parse(run(['--format', 'sarif'], root).stdout);
       assert.equal(sarif.version, '2.1.0');
       assert.equal(sarif.runs[0].results[0].ruleId, 'skip-added');
@@ -106,7 +106,7 @@ describe('cli', () => {
   });
 
   test('usage errors exit 2', () => {
-    const dir = mkdtempSync(path.join(os.tmpdir(), 'anticheat-nogit-'));
+    const dir = mkdtempSync(path.join(os.tmpdir(), 'noskip-nogit-'));
     try {
       assert.equal(run([], dir).code, 2);
       assert.equal(run(['--bogus'], dir).code, 2);
@@ -136,6 +136,6 @@ describe('cli', () => {
       encoding: 'utf8',
     });
     assert.equal(res.status, 2);
-    assert.match(res.stderr, /anticheat blocked/);
+    assert.match(res.stderr, /noskip blocked/);
   });
 });

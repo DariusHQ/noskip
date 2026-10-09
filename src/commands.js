@@ -11,7 +11,7 @@ function segments(cmd) {
 }
 
 const HOOK_DIRS = String.raw`(?:\.git[\\/]+hooks|\.husky)\b`;
-const GUARD_FILES = /\.anticheat\.json|\.claude[\\/]settings(?:\.local)?\.json|\.codex[\\/](?:hooks\.json|config\.toml)|\.cursor[\\/]hooks\.json|\.gemini[\\/]settings\.json/;
+const GUARD_FILES = /\.noskip\.json|\.claude[\\/]settings(?:\.local)?\.json|\.codex[\\/](?:hooks\.json|config\.toml)|\.cursor[\\/]hooks\.json|\.gemini[\\/]settings\.json/;
 
 const CHECKS = [
   {
@@ -51,15 +51,15 @@ const CHECKS = [
   },
   {
     rule: 'guard-tampered',
-    test: (seg) => /\banticheat\b.*\buninstall\b/.test(seg),
-    message: 'uninstalling anticheat needs a human decision',
+    test: (seg) => /\bnoskip\b.*\buninstall\b/.test(seg),
+    message: 'uninstalling noskip needs a human decision',
   },
   {
     rule: 'guard-tampered',
     test: (seg) =>
       (/\b(?:sed|perl)\b.*\s-i|\b(?:Set-Content|Add-Content|Out-File|tee|truncate)\b/.test(seg) && GUARD_FILES.test(seg)) ||
       new RegExp(String.raw`>>?\s*["']?[^\s"']*(?:${GUARD_FILES.source})`).test(seg),
-    message: 'editing anticheat or agent hook configuration needs a human decision',
+    message: 'editing noskip or agent hook configuration needs a human decision',
   },
 ];
 

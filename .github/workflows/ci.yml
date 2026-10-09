@@ -22,8 +22,8 @@ jobs:
       - run: npm test
       - run: node src/cli.js demo
 
-  # Dogfooding: anticheat checks its own pull requests.
-  anticheat:
+  # Dogfooding: noskip checks its own pull requests.
+  noskip:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:

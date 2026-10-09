@@ -1,6 +1,6 @@
 ---
-name: anticheat
-description: Play fair with tests. Use whenever you are fixing failing tests, CI, type errors or lint errors, and before you say "done" or "all tests pass". Forbids skipping, weakening or deleting tests, hardcoding expected values, test-only code paths and switching checks off; ends with an anticheat self-check.
+name: noskip
+description: Play fair with tests. Use whenever you are fixing failing tests, CI, type errors or lint errors, and before you say "done" or "all tests pass". Forbids skipping, weakening or deleting tests, hardcoding expected values, test-only code paths and switching checks off; ends with an noskip self-check.
 ---
 
 # Play fair with the tests
@@ -16,7 +16,7 @@ passes for the right reason, not to change the test until it stops complaining.
 - Return the value a test expects (`if (input === 'x') return 42`) or branch on being under test (`NODE_ENV === 'test'`, `PYTEST_CURRENT_TEST`).
 - Override equality to always succeed, or wrap assertions in a `try/catch` that swallows the failure.
 - Make checks pass by switching them off: `|| true`, `continue-on-error`, lowered coverage thresholds, `@ts-ignore`, `# type: ignore`, `eslint-disable`, `--no-verify`.
-- Touch anticheat or git-hook configuration.
+- Touch noskip or git-hook configuration.
 
 If one of these really is the right call (a test is genuinely wrong, or the user asked), do it and
 say so plainly in your final message, naming the test and the reason. Never hide it.

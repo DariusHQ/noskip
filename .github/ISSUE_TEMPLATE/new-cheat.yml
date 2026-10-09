@@ -1,4 +1,4 @@
-name: My agent cheated and anticheat missed it
+name: My agent cheated and noskip missed it
 description: Share a diff where an AI agent gamed the tests without being caught.
 title: "Missed cheat: "
 labels: ["new-cheat"]

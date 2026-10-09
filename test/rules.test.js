@@ -480,19 +480,19 @@ describe('checks switched off', () => {
 });
 
 describe('tampering', () => {
-  test('anticheat removed from agent hooks', () => {
-    const settings = '{\n  "hooks": {\n    "Stop": [\n      { "hooks": [{ "type": "command", "command": "npx -y anticheat hook claude stop" }] }\n    ]\n  }\n}\n';
+  test('noskip removed from agent hooks', () => {
+    const settings = '{\n  "hooks": {\n    "Stop": [\n      { "hooks": [{ "type": "command", "command": "npx -y noskip hook claude stop" }] }\n    ]\n  }\n}\n';
     const r = scenario({ '.claude/settings.json': settings }, { '.claude/settings.json': '{}\n' });
     assert.deepEqual(rules(r), ['guard-tampered']);
   });
 
-  test('changing .anticheat.json is flagged', () => {
-    const r = scenario({ '.anticheat.json': '{ "rules": {} }\n' }, { '.anticheat.json': '{ "rules": { "skip-added": "off" } }\n' });
+  test('changing .noskip.json is flagged', () => {
+    const r = scenario({ '.noskip.json': '{ "rules": {} }\n' }, { '.noskip.json': '{ "rules": { "skip-added": "off" } }\n' });
     assert.deepEqual(rules(r), ['guard-tampered']);
   });
 
-  test('an anticheat-ignore marker suppresses the finding but is itself reported', () => {
-    const r = scenario(base, { 'test/math.test.js': JS_TEST.replace("it('divides'", "it.skip('divides' /* anticheat-ignore */") });
+  test('an noskip-ignore marker suppresses the finding but is itself reported', () => {
+    const r = scenario(base, { 'test/math.test.js': JS_TEST.replace("it('divides'", "it.skip('divides' /* noskip-ignore */") });
     assert.deepEqual(rules(r), ['ignore-marker-added']);
   });
 });
@@ -500,7 +500,7 @@ describe('tampering', () => {
 describe('configuration', () => {
   test('config comes from the base revision, so a change cannot disable its own checks', () => {
     const r = scenario(base, {
-      '.anticheat.json': '{ "rules": { "skip-added": "off" } }\n',
+      '.noskip.json': '{ "rules": { "skip-added": "off" } }\n',
       'test/math.test.js': JS_TEST.replace("it('adds'", "it.skip('adds'"),
     });
     assert.deepEqual(rules(r), ['skip-added']);
@@ -508,7 +508,7 @@ describe('configuration', () => {
 
   test('committed config can turn rules off, change severity and ignore paths', () => {
     const r = scenario(
-      { ...base, '.anticheat.json': '{ "rules": { "skip-added": "off", "only-added": "low" }, "ignore": ["legacy/"] }\n', 'legacy/old.test.js': JS_TEST },
+      { ...base, '.noskip.json': '{ "rules": { "skip-added": "off", "only-added": "low" }, "ignore": ["legacy/"] }\n', 'legacy/old.test.js': JS_TEST },
       {
         'test/math.test.js': JS_TEST.replace("it('adds'", "it.skip('adds'").replace("it('divides'", "it.only('divides'"),
         'legacy/old.test.js': JS_TEST.replace("it('adds'", "it.only('adds'"),
@@ -527,11 +527,11 @@ describe('configuration', () => {
     assert.deepEqual(rules(r), []);
   });
 
-  test('an Anticheat-Allow trailer signs off on a finding in a commit range', () => {
+  test('an Noskip-Allow trailer signs off on a finding in a commit range', () => {
     const root = makeRepo(base);
     try {
       write(root, { 'test/math.test.js': JS_TEST.replace(/\n  it\('rejects division by zero'[\s\S]*?\n  \}\);\n/, '\n') });
-      commit(root, 'Drop the division-by-zero check\n\nAnticheat-Allow: test-removed (division by zero now returns Infinity, see #42)');
+      commit(root, 'Drop the division-by-zero check\n\nNoskip-Allow: test-removed (division by zero now returns Infinity, see #42)');
       const r = scan(root, { base: 'HEAD~1', head: 'HEAD' });
       const f = find(r, 'test-removed');
       assert.equal(f.severity, 'medium');

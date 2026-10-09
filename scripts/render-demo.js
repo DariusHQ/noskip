@@ -1,4 +1,4 @@
-// Renders `anticheat demo` (real output, real colors) to assets/demo.svg for the README.
+// Renders `noskip demo` (real output, real colors) to assets/demo.svg for the README.
 // Usage: node scripts/render-demo.js
 import { spawnSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
@@ -88,7 +88,7 @@ lines.forEach((line, row) => {
 
 const W = Math.ceil(PAD_X * 2 + maxCols * CW);
 const H = TOP + lines.length * LH + 6;
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="anticheat demo output: six shortcuts caught in an AI agent's diff">
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="noskip demo output: six shortcuts caught in an AI agent's diff">
 <style>text{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;font-size:14px;white-space:pre}</style>
 <rect width="${W}" height="${H}" rx="10" fill="#0d1117"/>
 <rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="10" fill="none" stroke="#30363d"/>

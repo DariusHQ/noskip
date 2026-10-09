@@ -9,18 +9,18 @@ import { scan } from './scan.js';
 import { atLeast, HOMEPAGE, makeColors, supportsColor, VERSION } from './util.js';
 
 const HELP = `
-anticheat ${VERSION}: anti-cheat for AI coding agents
+noskip ${VERSION}: anti-cheat for AI coding agents
 
 Catches the shortcuts agents take to make tests pass: skipped, weakened or deleted
 tests, hardcoded answers, test-only code paths, and CI checks switched off.
 
 Usage
-  anticheat [<rev>] [options]        Scan changes (default: HEAD → working tree)
-  anticheat demo                     Watch it catch a cheating agent
-  anticheat install <target...>      Set up: claude codex gemini cursor git github
-  anticheat uninstall <target...>    Remove what install added
-  anticheat rules                    List every rule
-  anticheat badge                    Print a README badge
+  noskip [<rev>] [options]        Scan changes (default: HEAD → working tree)
+  noskip demo                     Watch it catch a cheating agent
+  noskip install <target...>      Set up: claude codex gemini cursor git github
+  noskip uninstall <target...>    Remove what install added
+  noskip rules                    List every rule
+  noskip badge                    Print a README badge
 
 Options
   --staged            Scan staged changes (for pre-commit)
@@ -29,9 +29,9 @@ Options
   --format <name>     pretty | json | markdown | github | sarif
   --json              Same as --format json
   --fail-on <level>   Exit 1 at this severity: high (default) | medium | low | never
-  --config <file>     Use this config instead of .anticheat.json from the base revision
+  --config <file>     Use this config instead of .noskip.json from the base revision
   --global            install: write user-level agent config instead of the project's
-  --command <cmd>     install: how hooks should launch anticheat
+  --command <cmd>     install: how hooks should launch noskip
   -q, --quiet         Print nothing when there is nothing to report
   --no-color          Disable colors
   -h, --help          Show this help
@@ -129,7 +129,7 @@ function cmdScan(opts, color) {
 function cmdInstall(opts, color, remove) {
   const c = makeColors(color);
   const targets = opts._.slice(1);
-  if (!targets.length) throw new UsageError(`which target? ${TARGETS.join(' | ')}  (e.g. anticheat ${remove ? 'uninstall' : 'install'} claude git)`);
+  if (!targets.length) throw new UsageError(`which target? ${TARGETS.join(' | ')}  (e.g. noskip ${remove ? 'uninstall' : 'install'} claude git)`);
   const root = repoRoot(process.cwd());
   let failed = false;
   for (const target of targets) {
@@ -151,7 +151,7 @@ function main(argv) {
   try {
     opts = parseArgs(argv);
   } catch (err) {
-    console.error(`anticheat: ${err.message}\nRun "anticheat --help" for usage.`);
+    console.error(`noskip: ${err.message}\nRun "noskip --help" for usage.`);
     return 2;
   }
   const color = opts.color ?? supportsColor(process.stdout);
@@ -176,7 +176,7 @@ function main(argv) {
       case 'demo': {
         const c = makeColors(color);
         console.log(`\n${c.bold('An AI agent was told:')} ${c.italic('"the cart tests are failing, make them pass"')}`);
-        console.log(c.dim('It reported: "All tests pass ✅". Here is what anticheat found in its diff:'));
+        console.log(c.dim('It reported: "All tests pass ✅". Here is what noskip found in its diff:'));
         const result = runDemo();
         process.stdout.write(formatPretty(result, { color }));
         console.log(`${c.bold('Protect your repo:')}  npx noskip install claude ${c.dim('(or codex, cursor, gemini, git, github)')}\n`);
@@ -189,14 +189,14 @@ function main(argv) {
         process.stdout.write(formatRules(color));
         return 0;
       case 'badge':
-        console.log(`[![anticheat](https://img.shields.io/badge/AI%20agents-anticheat%20protected-2ea44f)](${HOMEPAGE})`);
+        console.log(`[![noskip](https://img.shields.io/badge/AI%20agents-noskip%20protected-2ea44f)](${HOMEPAGE})`);
         return 0;
       default:
         return cmdScan(opts, color);
     }
   } catch (err) {
-    if (process.env.ANTICHEAT_DEBUG) console.error(err);
-    console.error(`anticheat: ${err.message}`);
+    if (process.env.NOSKIP_DEBUG) console.error(err);
+    console.error(`noskip: ${err.message}`);
     return 2;
   }
 }

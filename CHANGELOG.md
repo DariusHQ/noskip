@@ -10,6 +10,6 @@ First release.
 - `install` / `uninstall` for agents, git pre-commit and a GitHub workflow.
 - GitHub Action with line annotations and a job summary.
 - Output as pretty, JSON, Markdown, GitHub annotations or SARIF.
-- `Anticheat-Allow:` commit trailers to sign off on a deletion in pull requests.
+- `Noskip-Allow:` commit trailers to sign off on a deletion in pull requests.
 - Tuned against the last 1,000 commits of Node.js: 0.9% of human commits get a blocking finding, each a real test or assertion deletion.
-- `anticheat demo`.
+- `noskip demo`.

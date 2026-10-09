@@ -1,14 +1,14 @@
 {
-  "name": "anticheat",
-  "displayName": "anticheat",
+  "name": "noskip",
+  "displayName": "noskip",
   "version": "1.0.0",
   "description": "Anti-cheat for AI coding agents: stops Claude from finishing a turn that skips, weakens or deletes tests, hardcodes answers or switches checks off.",
   "author": {
     "name": "DariusHQ",
     "url": "https://github.com/DariusHQ"
   },
-  "homepage": "https://github.com/DariusHQ/anticheat",
-  "repository": "https://github.com/DariusHQ/anticheat",
+  "homepage": "https://github.com/DariusHQ/noskip",
+  "repository": "https://github.com/DariusHQ/noskip",
   "license": "MIT",
   "keywords": ["testing", "reward-hacking", "code-review", "hooks", "quality"]
 }

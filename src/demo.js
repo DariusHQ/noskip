@@ -1,4 +1,4 @@
-// `anticheat demo`: a tiny repo, an agent told to "make the failing tests pass", and the receipts.
+// `noskip demo`: a tiny repo, an agent told to "make the failing tests pass", and the receipts.
 import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -121,7 +121,7 @@ function writeTree(root, files) {
 }
 
 export function runDemo() {
-  const root = mkdtempSync(path.join(os.tmpdir(), 'anticheat-demo-'));
+  const root = mkdtempSync(path.join(os.tmpdir(), 'noskip-demo-'));
   try {
     const cfg = ['-c', 'user.name=demo', '-c', 'user.email=demo@example.com', '-c', 'commit.gpgsign=false', '-c', 'core.autocrlf=false'];
     git(['init', '-q'], { cwd: root });

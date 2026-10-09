@@ -1,4 +1,4 @@
-name: 'anticheat: AI agent test-gaming detector'
+name: 'noskip: AI agent test-gaming detector'
 description: 'Fail pull requests that skip, weaken or delete tests, hardcode answers, or switch CI checks off. Zero dependencies.'
 author: 'DariusHQ'
 branding:
@@ -30,7 +30,7 @@ runs:
         INPUT_BASE: ${{ inputs.base }}
         INPUT_FAIL_ON: ${{ inputs.fail-on }}
         INPUT_FORMAT: ${{ inputs.format }}
-        ANTICHEAT_CLI: ${{ github.action_path }}/src/cli.js
+        NOSKIP_CLI: ${{ github.action_path }}/src/cli.js
       run: |
         set -uo pipefail
         base="$INPUT_BASE"
@@ -43,11 +43,11 @@ runs:
           fi
         fi
         if ! git rev-parse --verify --quiet "$base^{commit}" >/dev/null; then
-          echo "::error title=anticheat::Cannot resolve '$base'. Use actions/checkout with fetch-depth: 0."
+          echo "::error title=noskip::Cannot resolve '$base'. Use actions/checkout with fetch-depth: 0."
           exit 2
         fi
-        node "$ANTICHEAT_CLI" --base "$base" --head HEAD --format "$INPUT_FORMAT" --fail-on "$INPUT_FAIL_ON"
+        node "$NOSKIP_CLI" --base "$base" --head HEAD --format "$INPUT_FORMAT" --fail-on "$INPUT_FAIL_ON"
         code=$?
-        verdict=$(node "$ANTICHEAT_CLI" --base "$base" --head HEAD --json --fail-on never | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{console.log(JSON.parse(s).verdict)}catch{console.log("unknown")}})')
+        verdict=$(node "$NOSKIP_CLI" --base "$base" --head HEAD --json --fail-on never | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{console.log(JSON.parse(s).verdict)}catch{console.log("unknown")}})')
         echo "verdict=$verdict" >> "$GITHUB_OUTPUT"
         exit $code

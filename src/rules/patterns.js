@@ -205,7 +205,7 @@ const LINT_SUPPRESSED = [
 
 const ANY_CAST = [/\bas\s+any\b/, /<any>\s*[\w(]/, /\bas\s+unknown\s+as\b/];
 
-const IGNORE_MARKER = [/\banticheat-(?:ignore|disable)\b/i];
+const IGNORE_MARKER = [/\bnoskip-(?:ignore|disable)\b/i];
 
 const NO_VERIFY = [
   /--no-verify\b/,
@@ -338,7 +338,7 @@ export const patternRules = [
     id: 'ignore-marker-added',
     severity: 'medium',
     category: 'tampering',
-    title: 'anticheat-ignore marker added',
+    title: 'noskip-ignore marker added',
     hint: 'Ignore markers need a human decision. Leave them out of agent-written changes.',
     applies: (f) => f.newText !== null,
     check: (f) => netNewLines(f, IGNORE_MARKER),

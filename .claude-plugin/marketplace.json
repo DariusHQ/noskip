@@ -1,5 +1,5 @@
 {
-  "name": "anticheat",
+  "name": "noskip",
   "owner": {
     "name": "DariusHQ",
     "url": "https://github.com/DariusHQ"
@@ -7,7 +7,7 @@
   "description": "Anti-cheat for AI coding agents.",
   "plugins": [
     {
-      "name": "anticheat",
+      "name": "noskip",
       "source": "./",
       "description": "Stops Claude from finishing a turn that skips, weakens or deletes tests, hardcodes answers or switches checks off.",
       "category": "quality",

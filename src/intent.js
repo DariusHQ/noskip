@@ -28,7 +28,7 @@ const INTENTS = [
   { rules: ['coverage-lowered'], re: /\b(?:lower|reduce|decrease|relax)\b[^.?!\n]{0,40}?\bcoverage\b/i },
   { rules: ['strictness-reduced'], re: /\b(?:disable|turn off|relax|loosen)\b[^.?!\n]{0,40}?\b(?:strict\w*|rule|lint|type ?check\w*|mypy|pyright|eslint)\b/i },
   { rules: ['no-verify'], re: /--no-verify|\bskip (?:the )?(?:git )?hooks\b|\bno-verify\b/i },
-  { rules: ['guard-tampered', 'ignore-marker-added'], re: /\banti-?cheat\b/i },
+  { rules: ['guard-tampered', 'ignore-marker-added'], re: /\b(?:noskip|anti-?cheat)\b/i },
   { rules: ['error-swallowed'], re: /\b(?:ignore|swallow|suppress)\b[^.?!\n]{0,30}?\b(?:errors?|exceptions?)\b/i },
 ];
 

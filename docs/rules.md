@@ -9,7 +9,7 @@ re-indented, or was renamed together with its tests is not reported.
 | 🟡 medium | Worth a human look | Reported to you, never blocks | `0` unless `--fail-on medium` |
 | ⚪ low | Informational | Not reported | `0` unless `--fail-on low` |
 
-Change any severity, or turn a rule off, in [`.anticheat.json`](#configuration).
+Change any severity, or turn a rule off, in [`.noskip.json`](#configuration).
 
 **Tests that stopped running:** [skip-added](#skip-added) · [only-added](#only-added) · [test-file-deleted](#test-file-deleted) · [test-removed](#test-removed) · [test-run-narrowed](#test-run-narrowed) · [test-replaced](#test-replaced)
 
@@ -160,17 +160,17 @@ try {
 
 ## guard-tampered
 
-🔴 high. The referee was touched: `.anticheat.json` changed or deleted, `anticheat` removed from `.claude/settings.json`, `.codex/hooks.json`, `.cursor/hooks.json`, `.gemini/settings.json`, husky/lefthook/pre-commit config or a CI workflow. Deleting a git-hook config is 🟡 medium. The agent hooks also refuse commands like `git update-index --assume-unchanged`, `rm .git/hooks/pre-commit`, `chmod -x .husky/*` and `anticheat uninstall`.
+🔴 high. The referee was touched: `.noskip.json` changed or deleted, `noskip` removed from `.claude/settings.json`, `.codex/hooks.json`, `.cursor/hooks.json`, `.gemini/settings.json`, husky/lefthook/pre-commit config or a CI workflow. Deleting a git-hook config is 🟡 medium. The agent hooks also refuse commands like `git update-index --assume-unchanged`, `rm .git/hooks/pre-commit`, `chmod -x .husky/*` and `noskip uninstall`.
 
 ## ignore-marker-added
 
-🟡 medium. An `anticheat-ignore` comment was added. It still suppresses the finding it annotates, but a human sees that it was added.
+🟡 medium. An `noskip-ignore` comment was added. It still suppresses the finding it annotates, but a human sees that it was added.
 
 ---
 
 ## Configuration
 
-`.anticheat.json` in the repository root. It is read from the **base** revision of the
+`.noskip.json` in the repository root. It is read from the **base** revision of the
 diff (HEAD for local scans, the merge-base for pull requests), so a change can never loosen
 the rules it is judged by. Commit config changes on their own.
 
@@ -198,11 +198,11 @@ Vendored and generated paths (`node_modules/`, `vendor/`, `dist/`, `build/`, loc
 ### Inline exceptions
 
 ```js
-it.skip('talks to the real payment sandbox', () => { // anticheat-ignore skip-added: needs credentials, runs nightly
+it.skip('talks to the real payment sandbox', () => { // noskip-ignore skip-added: needs credentials, runs nightly
 ```
 
-`anticheat-ignore` applies to its own line, `anticheat-ignore-next-line` to the line below. Name rules
-to be specific (`anticheat-ignore skip-added, only-added`); with no rule name it covers every rule.
+`noskip-ignore` applies to its own line, `noskip-ignore-next-line` to the line below. Name rules
+to be specific (`noskip-ignore skip-added, only-added`); with no rule name it covers every rule.
 Adding the marker is reported as [ignore-marker-added](#ignore-marker-added).
 
 ### Signing off on a deletion
@@ -213,7 +213,7 @@ say so in a commit message inside the scanned range (pull requests, `--base`, or
 ```text
 Remove the --jitless TypeScript test
 
-Anticheat-Allow: test-removed, assertions-removed (the --jitless flag no longer exists)
+Noskip-Allow: test-removed, assertions-removed (the --jitless flag no longer exists)
 ```
 
 Matching findings stay in the report, downgraded from high to medium and annotated with the commit

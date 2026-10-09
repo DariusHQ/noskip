@@ -265,25 +265,25 @@ export const configRules = [
     id: 'guard-tampered',
     severity: 'high',
     category: 'tampering',
-    title: 'Anti-cheat or git hook configuration weakened',
-    hint: 'Changes to anticheat and git-hook config need a human. Revert them.',
+    title: 'noskip or git hook configuration weakened',
+    hint: 'Changes to noskip and git-hook config need a human. Revert them.',
     checkAll(ctx) {
       const out = [];
       for (const f of ctx.files) {
         const base = path.posix.basename(f.path);
-        if (base === '.anticheat.json' && f.status !== 'A') {
-          out.push({ file: f, line: f.hunks[0]?.newStart ?? 1, message: f.status === 'D' ? 'Deleted .anticheat.json' : 'Changed .anticheat.json' });
+        if (base === '.noskip.json' && f.status !== 'A') {
+          out.push({ file: f, line: f.hunks[0]?.newStart ?? 1, message: f.status === 'D' ? 'Deleted .noskip.json' : 'Changed .noskip.json' });
           continue;
         }
         if (!f.kind.guard) continue;
-        const count = (lines) => (lines ?? []).filter((l) => /anticheat/i.test(l)).length;
+        const count = (lines) => (lines ?? []).filter((l) => /noskip/i.test(l)).length;
         if (count(f.newLines) < count(f.oldLines)) {
-          const gone = removedNotReadded(f, (t) => /anticheat/i.test(t))[0];
+          const gone = removedNotReadded(f, (t) => /noskip/i.test(t))[0];
           out.push({
             file: f,
             line: gone ? oldToNewLine(f, gone.line) : 1,
             snippet: gone ? truncate(gone.text) : undefined,
-            message: f.status === 'D' ? `Deleted ${f.path}, which ran anticheat` : `anticheat removed from ${f.path}`,
+            message: f.status === 'D' ? `Deleted ${f.path}, which ran noskip` : `noskip removed from ${f.path}`,
           });
         } else if (f.status === 'D' && /(^|\/)(\.husky\/[^/]+|\.pre-commit-config\.ya?ml|\.?lefthook\.ya?ml)$/.test(f.path)) {
           out.push({ file: f, line: 1, severity: 'medium', message: `Deleted git hook config ${f.path}` });

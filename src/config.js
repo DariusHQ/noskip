@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { SEVERITIES } from './util.js';
 
-export const CONFIG_FILE = '.anticheat.json';
+export const CONFIG_FILE = '.noskip.json';
 
 export const DEFAULT_CONFIG = Object.freeze({
   ignore: [],

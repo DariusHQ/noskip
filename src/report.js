@@ -21,7 +21,7 @@ export function formatPretty(result, { color = false, quiet = false } = {}) {
   };
   if (!quiet) {
     const range = result.range ? `${result.range.oldLabel} → ${result.range.newLabel}` : '';
-    out.push('', `${c.bold('anticheat')} ${c.dim(`v${VERSION}`)}  ${c.dim(range)}`, '');
+    out.push('', `${c.bold('noskip')} ${c.dim(`v${VERSION}`)}  ${c.dim(range)}`, '');
   } else if (!result.findings.length) return '';
   for (const f of result.findings) {
     out.push(`${sev[f.severity](LABEL[f.severity])} ${c.bold(f.rule)}  ${c.cyan(`${f.path}:${f.line}`)}${f.requested ? c.dim('  (requested by the user)') : ''}`);
@@ -45,7 +45,7 @@ export function formatPretty(result, { color = false, quiet = false } = {}) {
 export function formatJSON(result) {
   return JSON.stringify(
     {
-      tool: 'anticheat',
+      tool: 'noskip',
       version: VERSION,
       verdict: result.verdict,
       score: result.score,
@@ -65,9 +65,9 @@ const html = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
 export function formatMarkdown(result) {
   const { counts, verdict, score, findings, filesScanned } = result;
   const head = {
-    busted: `### 🚨 anticheat: BUSTED`,
-    suspicious: `### ⚠️ anticheat: suspicious changes`,
-    clean: `### ✅ anticheat: clean`,
+    busted: `### 🚨 noskip: BUSTED`,
+    suspicious: `### ⚠️ noskip: suspicious changes`,
+    clean: `### ✅ noskip: clean`,
   }[verdict];
   const lines = [head, ''];
   if (!findings.length) {
@@ -81,7 +81,7 @@ export function formatMarkdown(result) {
       lines.push(`| ${icon[f.severity]} | \`${f.rule}\` | \`${html(f.path)}:${f.line}\` | ${html(f.message)}${snippet} |`);
     }
   }
-  lines.push('', `<sub>[anticheat](${HOMEPAGE}) v${VERSION}: anti-cheat for AI coding agents</sub>`, '');
+  lines.push('', `<sub>[noskip](${HOMEPAGE}) v${VERSION}: anti-cheat for AI coding agents</sub>`, '');
   return lines.join('\n');
 }
 
@@ -92,7 +92,7 @@ export function formatGitHub(result) {
   const level = { high: 'error', medium: 'warning', low: 'notice' };
   const out = result.findings.map(
     (f) =>
-      `::${level[f.severity]} file=${escProp(f.path)},line=${f.line},title=${escProp(`anticheat/${f.rule}`)}::${escData(`${f.message}${f.hint ? `\n${f.hint}` : ''}`)}`,
+      `::${level[f.severity]} file=${escProp(f.path)},line=${f.line},title=${escProp(`noskip/${f.rule}`)}::${escData(`${f.message}${f.hint ? `\n${f.hint}` : ''}`)}`,
   );
   out.push(formatPretty(result, { color: false }));
   return out.join('\n');
@@ -118,7 +118,7 @@ export function formatSARIF(result) {
       version: '2.1.0',
       runs: [
         {
-          tool: { driver: { name: 'anticheat', version: VERSION, informationUri: HOMEPAGE, rules } },
+          tool: { driver: { name: 'noskip', version: VERSION, informationUri: HOMEPAGE, rules } },
           results: result.findings.map((f) => ({
             ruleId: f.rule,
             level: sarifLevel(f.severity),

@@ -62,10 +62,10 @@ export function resolveRange(root, { base, mergeBaseRef, staged = false, head } 
   return { oldTree, newTree, oldLabel, newLabel, oldCommit, newCommit };
 }
 
-const ALLOW_TRAILER = /^anticheat-allow:[ \t]*(.+)$/gim;
+const ALLOW_TRAILER = /^noskip-allow:[ \t]*(.+)$/gim;
 
 /**
- * `Anticheat-Allow: test-removed, assertions-removed (the --jitless flag is gone)` in a commit
+ * `Noskip-Allow: test-removed, assertions-removed (the --jitless flag is gone)` in a commit
  * message of the scanned range: a human signed off on that change. The finding stays visible,
  * downgraded to medium, so it no longer fails the check.
  */
@@ -131,7 +131,7 @@ function buildFile(d, blobs, oldTree, newTree, cfg) {
   };
 }
 
-const IGNORE_COMMENT = /anticheat-ignore(?:-next-line)?(?![\w-])(?:\s*:?\s*([a-z][\w-]*(?:\s*,\s*[a-z][\w-]*)*))?/i;
+const IGNORE_COMMENT = /noskip-ignore(?:-next-line)?(?![\w-])(?:\s*:?\s*([a-z][\w-]*(?:\s*,\s*[a-z][\w-]*)*))?/i;
 
 function suppressed(file, finding) {
   if (finding.rule === 'ignore-marker-added' || !file.newLines) return false;
@@ -140,7 +140,7 @@ function suppressed(file, finding) {
     if (!text) continue;
     const m = IGNORE_COMMENT.exec(text);
     if (!m) continue;
-    if (ln === finding.line - 1 && !/anticheat-ignore-next-line/i.test(text)) continue;
+    if (ln === finding.line - 1 && !/noskip-ignore-next-line/i.test(text)) continue;
     const ids = (m[1] ?? '').split(',').map((s) => s.trim()).filter((s) => RULES_BY_ID.has(s));
     if (ids.length === 0 || ids.includes(finding.rule)) return true;
   }
@@ -197,7 +197,7 @@ export function scanTrees({ root, oldTree, newTree, config, prompt, allowed } = 
       else for (const f of files) if (rule.applies(f)) for (const h of rule.check(f)) hits.push({ file: f, ...h });
     } catch (err) {
       // A bug in one rule must never break someone's commit or block their agent.
-      if (process.env.ANTICHEAT_DEBUG) throw err;
+      if (process.env.NOSKIP_DEBUG) throw err;
       errors.push({ rule: rule.id, message: err.message });
       continue;
     }

@@ -18,7 +18,7 @@ export const EVENTS = ['prompt', 'stop', 'pretool'];
 const STATE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 function stateDir(root) {
-  return gitPath(root, 'anticheat/sessions');
+  return gitPath(root, 'noskip/sessions');
 }
 
 function stateFile(root, sessionId) {
@@ -86,7 +86,7 @@ function out(stdout, code = 0) {
 // ---------- messages ----------
 
 export function agentMessage(findings) {
-  const lines = ['anticheat flagged changes that make tests pass without fixing the code:', ''];
+  const lines = ['noskip flagged changes that make tests pass without fixing the code:', ''];
   for (const f of findings.slice(0, 12)) {
     lines.push(`- [${f.severity}] ${f.rule} at ${f.path}:${f.line}: ${f.message}`);
     if (f.snippet) lines.push(`    ${f.snippet}`);
@@ -107,7 +107,7 @@ export function userMessage(result) {
     .slice(0, 3)
     .map((f) => `${f.rule} ${f.path}:${f.line}`)
     .join(', ');
-  return `anticheat: ${counts.high} high, ${counts.medium} medium finding${counts.high + counts.medium === 1 ? '' : 's'} in this turn (${top}${findings.length > 3 ? ', …' : ''}). Review with: npx noskip`;
+  return `noskip: ${counts.high} high, ${counts.medium} medium finding${counts.high + counts.medium === 1 ? '' : 's'} in this turn (${top}${findings.length > 3 ? ', …' : ''}). Review with: npx noskip`;
 }
 
 // ---------- input parsing ----------
@@ -187,15 +187,15 @@ function onPreTool(agent, input) {
   if (requestedRules(state?.prompt).has(hit.rule)) return allow(agent, 'pretool');
   return deny(
     agent,
-    `anticheat blocked this command: ${hit.message}. Fix what the checks report instead. If the user explicitly wants this, ask them to run it themselves.`,
-    `anticheat blocked: ${hit.segment}`,
+    `noskip blocked this command: ${hit.message}. Fix what the checks report instead. If the user explicitly wants this, ask them to run it themselves.`,
+    `noskip blocked: ${hit.segment}`,
   );
 }
 
 /** Run one hook. Returns { code, stdout, stderr } so it can be tested without a process. */
 export function runHook(agent, event, raw) {
   if (!AGENTS.includes(agent) || !EVENTS.includes(event)) {
-    return { code: 0, stdout: '', stderr: `anticheat: unknown hook ${agent} ${event}` };
+    return { code: 0, stdout: '', stderr: `noskip: unknown hook ${agent} ${event}` };
   }
   try {
     const input = parseInput(raw);
@@ -206,7 +206,7 @@ export function runHook(agent, event, raw) {
     return onStop(agent, input, root);
   } catch (err) {
     const res = allow(agent, event);
-    res.stderr = `anticheat: hook error (${err.message}); allowing.`;
+    res.stderr = `noskip: hook error (${err.message}); allowing.`;
     return res;
   }
 }

@@ -5,7 +5,7 @@ import { describe, test } from 'node:test';
 import { install } from '../src/install.js';
 import { makeRepo, removeDir } from './helpers.js';
 
-const CMD = 'node "/opt/anticheat/src/cli.js"';
+const CMD = 'node "/opt/noskip/src/cli.js"';
 const readJSON = (p) => JSON.parse(readFileSync(p, 'utf8'));
 
 function withRepo(fn) {
@@ -70,13 +70,13 @@ describe('install', () => {
       assert.match(text, /npm run lint/);
       assert.equal(text.split(`${CMD} --staged`).length - 1, 1);
       install('git', { root, command: CMD, remove: true });
-      assert.doesNotMatch(readFileSync(hook, 'utf8'), /anticheat/);
+      assert.doesNotMatch(readFileSync(hook, 'utf8'), /noskip/);
     }));
 
   test('github: writes a pull_request workflow', () =>
     withRepo((root) => {
       install('github', { root });
-      const wf = readFileSync(path.join(root, '.github', 'workflows', 'anticheat.yml'), 'utf8');
+      const wf = readFileSync(path.join(root, '.github', 'workflows', 'noskip.yml'), 'utf8');
       assert.match(wf, /pull_request/);
       assert.match(wf, /fetch-depth: 0/);
       assert.match(wf, /--base "origin\/\$\{GITHUB_BASE_REF\}"/);

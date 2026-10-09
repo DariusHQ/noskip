@@ -1,5 +1,5 @@
 {
-  "description": "anticheat: snapshot each turn, send Claude back when it games the tests, refuse --no-verify",
+  "description": "noskip: snapshot each turn, send Claude back when it games the tests, refuse --no-verify",
   "hooks": {
     "UserPromptSubmit": [
       {

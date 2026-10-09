@@ -4,8 +4,7 @@
   "description": "Anti-cheat for AI coding agents. Catches Claude Code, Codex, Cursor and Gemini CLI when they skip, weaken or delete tests to make them pass.",
   "type": "module",
   "bin": {
-    "noskip": "src/cli.js",
-    "anticheat": "src/cli.js"
+    "noskip": "src/cli.js"
   },
   "files": [
     "src",
@@ -45,8 +44,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DariusHQ/anticheat.git"
+    "url": "git+https://github.com/DariusHQ/noskip.git"
   },
-  "homepage": "https://github.com/DariusHQ/anticheat#readme",
-  "bugs": "https://github.com/DariusHQ/anticheat/issues"
+  "homepage": "https://github.com/DariusHQ/noskip#readme",
+  "bugs": "https://github.com/DariusHQ/noskip/issues"
 }

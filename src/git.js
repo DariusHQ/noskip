@@ -80,7 +80,7 @@ export function indexTree(root) {
  * object, without touching the real index, HEAD or any file on disk.
  */
 export function worktreeTree(root) {
-  const dir = gitPath(root, 'anticheat');
+  const dir = gitPath(root, 'noskip');
   mkdirSync(dir, { recursive: true });
   const tmpIndex = path.join(dir, `index-${process.pid}-${Date.now()}`);
   const realIndex = gitPath(root, 'index');
