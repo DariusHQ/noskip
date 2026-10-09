@@ -26,4 +26,4 @@ body:
     id: version
     attributes:
       label: anticheat version
-      placeholder: npx anticheat --version
+      placeholder: npx @dariushq/anticheat --version

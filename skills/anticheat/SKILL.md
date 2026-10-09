@@ -33,7 +33,7 @@ say so plainly in your final message, naming the test and the reason. Never hide
 Run the self-check and fix anything it reports:
 
 ```bash
-npx -y anticheat
+npx -y @dariushq/anticheat
 ```
 
 Exit code 0 means no shortcuts were found in your changes. A non-zero exit lists each one with

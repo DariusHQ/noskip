@@ -179,7 +179,7 @@ function main(argv) {
         console.log(c.dim('It reported: "All tests pass ✅". Here is what anticheat found in its diff:'));
         const result = runDemo();
         process.stdout.write(formatPretty(result, { color }));
-        console.log(`${c.bold('Protect your repo:')}  npx anticheat install claude ${c.dim('(or codex, cursor, gemini, git, github)')}\n`);
+        console.log(`${c.bold('Protect your repo:')}  npx @dariushq/anticheat install claude ${c.dim('(or codex, cursor, gemini, git, github)')}\n`);
         return 0;
       }
       case 'install':

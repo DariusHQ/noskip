@@ -1,5 +1,5 @@
 {
-  "name": "anticheat",
+  "name": "@dariushq/anticheat",
   "version": "1.0.0",
   "description": "Anti-cheat for AI coding agents. Catches Claude Code, Codex, Cursor and Gemini CLI when they skip, weaken or delete tests to make them pass.",
   "type": "module",
@@ -39,6 +39,9 @@
   ],
   "author": "DariusHQ",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DariusHQ/anticheat.git"
