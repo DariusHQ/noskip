@@ -1,0 +1,29 @@
+name: False positive
+description: anticheat flagged a change that was legitimate.
+title: "False positive: "
+labels: ["false-positive"]
+body:
+  - type: input
+    id: rule
+    attributes:
+      label: Rule id
+      placeholder: skip-added
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: anticheat output
+      render: text
+  - type: textarea
+    id: diff
+    attributes:
+      label: The diff
+      render: diff
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: anticheat version
+      placeholder: npx anticheat --version

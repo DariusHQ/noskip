@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="939" height="877" viewBox="0 0 939 877" role="img" aria-label="anticheat demo output: six shortcuts caught in an AI agent's diff">
+<style>text{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;font-size:14px;white-space:pre}</style>
+<rect width="939" height="877" rx="10" fill="#0d1117"/>
+<rect x="0.5" y="0.5" width="938" height="876" rx="10" fill="none" stroke="#30363d"/>
+<circle cx="20" cy="18" r="6" fill="#ff5f57"/><circle cx="40" cy="18" r="6" fill="#febc2e"/><circle cx="60" cy="18" r="6" fill="#28c840"/>
+<text x="22.0" y="52" fill="#e6edf3" opacity="0.75">$ npx anticheat demo</text>
+<text x="22.0" y="73" fill="#e6edf3" font-weight="700">An AI agent was told:</text>
+<text x="211.2" y="73" fill="#e6edf3" font-style="italic">"the cart tests are failing, make them pass"</text>
+<text x="22.0" y="94" fill="#e6edf3" opacity="0.62">It reported: "All tests pass ✅". Here is what anticheat found in its diff:</text>
+<text x="22.0" y="136" fill="#e6edf3" font-weight="700">anticheat</text>
+<text x="108.0" y="136" fill="#e6edf3" opacity="0.62">v1.0.0</text>
+<text x="176.8" y="136" fill="#e6edf3" opacity="0.62">before the agent → after "make the failing tests pass"</text>
+<rect x="22.0" y="163" width="51.6" height="20" rx="3" fill="#da3633"/>
+<text x="22.0" y="178" fill="#ffffff" font-weight="700"> HIGH </text>
+<text x="82.2" y="178" fill="#e6edf3" font-weight="700">ci-ignore-failure</text>
+<text x="245.6" y="178" fill="#56d4dd">.github/workflows/ci.yml:9</text>
+<text x="22.0" y="199" fill="#e6edf3">      Failing checks made to look green</text>
+<text x="73.6" y="220" fill="#8b949e">│</text>
+<text x="90.8" y="220" fill="#e6edf3" opacity="0.62">- run: npm test || true</text>
+<text x="73.6" y="241" fill="#8b949e">↳</text>
+<text x="90.8" y="241" fill="#e6edf3" font-style="italic" opacity="0.62">Let the step fail and fix the cause.</text>
+<rect x="22.0" y="268" width="51.6" height="20" rx="3" fill="#da3633"/>
+<text x="22.0" y="283" fill="#ffffff" font-weight="700"> HIGH </text>
+<text x="82.2" y="283" fill="#e6edf3" font-weight="700">hardcoded-answer</text>
+<text x="237.0" y="283" fill="#56d4dd">src/cart.js:4</text>
+<text x="22.0" y="304" fill="#e6edf3">      Returns 108, the exact value test/cart.test.js:10 expects</text>
+<text x="73.6" y="325" fill="#8b949e">│</text>
+<text x="90.8" y="325" fill="#e6edf3" opacity="0.62">if (coupon === 'SAVE10') return 108;</text>
+<text x="73.6" y="346" fill="#8b949e">↳</text>
+<text x="90.8" y="346" fill="#e6edf3" font-style="italic" opacity="0.62">Compute the result. Returning the test’s expected value passes the test without fixing anything.</text>
+<rect x="22.0" y="373" width="51.6" height="20" rx="3" fill="#da3633"/>
+<text x="22.0" y="388" fill="#ffffff" font-weight="700"> HIGH </text>
+<text x="82.2" y="388" fill="#e6edf3" font-weight="700">matcher-weakened</text>
+<text x="237.0" y="388" fill="#56d4dd">test/cart.test.js:14</text>
+<text x="22.0" y="409" fill="#e6edf3">      toBe(0.3) weakened to toBeTruthy()</text>
+<text x="73.6" y="430" fill="#8b949e">│</text>
+<text x="90.8" y="430" fill="#e6edf3" opacity="0.62">expect(total([{ price: 0.1 }, { price: 0.2 }])).toBeTruthy();</text>
+<text x="73.6" y="451" fill="#8b949e">↳</text>
+<text x="90.8" y="451" fill="#e6edf3" font-style="italic" opacity="0.62">Restore the precise assertion and fix the code to satisfy it.</text>
+<rect x="22.0" y="478" width="51.6" height="20" rx="3" fill="#da3633"/>
+<text x="22.0" y="493" fill="#ffffff" font-weight="700"> HIGH </text>
+<text x="82.2" y="493" fill="#e6edf3" font-weight="700">skip-added</text>
+<text x="185.4" y="493" fill="#56d4dd">test/cart.test.js:17</text>
+<text x="22.0" y="514" fill="#e6edf3">      Test disabled with a skip marker</text>
+<text x="73.6" y="535" fill="#8b949e">│</text>
+<text x="90.8" y="535" fill="#e6edf3" opacity="0.62">it.skip('never goes below zero', () =&gt; {</text>
+<text x="73.6" y="556" fill="#8b949e">↳</text>
+<text x="90.8" y="556" fill="#e6edf3" font-style="italic" opacity="0.62">Remove the skip and fix the code the test exercises.</text>
+<rect x="22.0" y="583" width="51.6" height="20" rx="3" fill="#da3633"/>
+<text x="22.0" y="598" fill="#ffffff" font-weight="700"> HIGH </text>
+<text x="82.2" y="598" fill="#e6edf3" font-weight="700">test-removed</text>
+<text x="202.6" y="598" fill="#56d4dd">test/cart.test.js:20</text>
+<text x="22.0" y="619" fill="#e6edf3">      Test “rejects unknown coupons” was removed</text>
+<text x="73.6" y="640" fill="#8b949e">│</text>
+<text x="90.8" y="640" fill="#e6edf3" opacity="0.62">it('rejects unknown coupons', () =&gt; {</text>
+<text x="73.6" y="661" fill="#8b949e">↳</text>
+<text x="90.8" y="661" fill="#e6edf3" font-style="italic" opacity="0.62">Put the test back. If the behavior really changed, update it instead of deleting it.</text>
+<rect x="22.0" y="688" width="51.6" height="20" rx="3" fill="#da3633"/>
+<text x="22.0" y="703" fill="#ffffff" font-weight="700"> HIGH </text>
+<text x="82.2" y="703" fill="#e6edf3" font-weight="700">coverage-lowered</text>
+<text x="237.0" y="703" fill="#56d4dd">vitest.config.js:5</text>
+<text x="22.0" y="724" fill="#e6edf3">      Coverage threshold lowered: lines 90 → 40</text>
+<text x="73.6" y="745" fill="#8b949e">│</text>
+<text x="90.8" y="745" fill="#e6edf3" opacity="0.62">lines: 40,</text>
+<text x="73.6" y="766" fill="#8b949e">↳</text>
+<text x="90.8" y="766" fill="#e6edf3" font-style="italic" opacity="0.62">Add tests to meet the threshold instead of lowering it.</text>
+<rect x="22.0" y="793" width="94.6" height="20" rx="3" fill="#da3633"/>
+<text x="22.0" y="808" fill="#ffffff" font-weight="700"> 🚨 BUSTED </text>
+<text x="116.6" y="808" fill="#e6edf3">  6 high · 0 medium · 0 low   </text>
+<text x="374.6" y="808" fill="#e6edf3" opacity="0.62">integrity 0/100</text>
+<text x="22.0" y="829" fill="#e6edf3" opacity="0.62">  These changes make tests pass without making the code correct.</text>
+<text x="22.0" y="850" fill="#e6edf3" font-weight="700">Protect your repo:</text>
+<text x="176.8" y="850" fill="#e6edf3">  npx anticheat install claude </text>
+<text x="443.4" y="850" fill="#e6edf3" opacity="0.62">(or codex, cursor, gemini, git, github)</text>
+</svg>

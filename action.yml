@@ -1,0 +1,53 @@
+name: 'anticheat: AI agent test-gaming detector'
+description: 'Fail pull requests that skip, weaken or delete tests, hardcode answers, or switch CI checks off. Zero dependencies.'
+author: 'journaltraces'
+branding:
+  icon: 'shield'
+  color: 'red'
+inputs:
+  base:
+    description: 'Ref to compare against (merge-base). Defaults to the pull request base branch, or HEAD~1 on push.'
+    required: false
+    default: ''
+  fail-on:
+    description: 'Lowest severity that fails the check: high, medium, low or never.'
+    required: false
+    default: 'high'
+  format:
+    description: 'Output format: github (annotations + job summary), sarif, json or markdown.'
+    required: false
+    default: 'github'
+outputs:
+  verdict:
+    description: 'clean, suspicious or busted'
+    value: ${{ steps.scan.outputs.verdict }}
+runs:
+  using: 'composite'
+  steps:
+    - id: scan
+      shell: bash
+      env:
+        INPUT_BASE: ${{ inputs.base }}
+        INPUT_FAIL_ON: ${{ inputs.fail-on }}
+        INPUT_FORMAT: ${{ inputs.format }}
+        ANTICHEAT_CLI: ${{ github.action_path }}/src/cli.js
+      run: |
+        set -uo pipefail
+        base="$INPUT_BASE"
+        if [ -z "$base" ]; then
+          if [ -n "${GITHUB_BASE_REF:-}" ]; then
+            git fetch --no-tags --quiet origin "$GITHUB_BASE_REF" || true
+            base="origin/$GITHUB_BASE_REF"
+          else
+            base="HEAD~1"
+          fi
+        fi
+        if ! git rev-parse --verify --quiet "$base^{commit}" >/dev/null; then
+          echo "::error title=anticheat::Cannot resolve '$base'. Use actions/checkout with fetch-depth: 0."
+          exit 2
+        fi
+        node "$ANTICHEAT_CLI" --base "$base" --head HEAD --format "$INPUT_FORMAT" --fail-on "$INPUT_FAIL_ON"
+        code=$?
+        verdict=$(node "$ANTICHEAT_CLI" --base "$base" --head HEAD --json --fail-on never | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{console.log(JSON.parse(s).verdict)}catch{console.log("unknown")}})')
+        echo "verdict=$verdict" >> "$GITHUB_OUTPUT"
+        exit $code

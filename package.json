@@ -1,0 +1,48 @@
+{
+  "name": "anticheat",
+  "version": "1.0.0",
+  "description": "Anti-cheat for AI coding agents. Catches Claude Code, Codex, Cursor and Gemini CLI when they skip, weaken or delete tests to make them pass.",
+  "type": "module",
+  "bin": {
+    "anticheat": "src/cli.js"
+  },
+  "files": [
+    "src",
+    "hooks",
+    "skills",
+    ".claude-plugin",
+    "action.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test",
+    "demo": "node src/cli.js demo",
+    "check": "node src/cli.js --base origin/main"
+  },
+  "keywords": [
+    "ai",
+    "ai-agents",
+    "claude-code",
+    "codex",
+    "cursor",
+    "gemini-cli",
+    "testing",
+    "reward-hacking",
+    "code-review",
+    "pre-commit",
+    "github-action",
+    "hooks"
+  ],
+  "author": "journaltraces",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/journaltraces/anticheat.git"
+  },
+  "homepage": "https://github.com/journaltraces/anticheat#readme",
+  "bugs": "https://github.com/journaltraces/anticheat/issues"
+}

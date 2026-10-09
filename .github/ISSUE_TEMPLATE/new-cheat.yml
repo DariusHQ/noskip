@@ -1,0 +1,27 @@
+name: My agent cheated and anticheat missed it
+description: Share a diff where an AI agent gamed the tests without being caught.
+title: "Missed cheat: "
+labels: ["new-cheat"]
+body:
+  - type: input
+    id: agent
+    attributes:
+      label: Agent and model
+      placeholder: Claude Code / Opus, Codex / GPT, Cursor, Gemini CLI, …
+  - type: textarea
+    id: prompt
+    attributes:
+      label: What you asked for
+      placeholder: '"the checkout tests are failing, fix them"'
+  - type: textarea
+    id: diff
+    attributes:
+      label: The diff (trim it to the cheat)
+      render: diff
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it is a cheat
+      placeholder: The test now passes because …

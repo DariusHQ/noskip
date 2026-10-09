@@ -1,0 +1,14 @@
+{
+  "name": "anticheat",
+  "displayName": "anticheat",
+  "version": "1.0.0",
+  "description": "Anti-cheat for AI coding agents: stops Claude from finishing a turn that skips, weakens or deletes tests, hardcodes answers or switches checks off.",
+  "author": {
+    "name": "journaltraces",
+    "url": "https://github.com/journaltraces"
+  },
+  "homepage": "https://github.com/journaltraces/anticheat",
+  "repository": "https://github.com/journaltraces/anticheat",
+  "license": "MIT",
+  "keywords": ["testing", "reward-hacking", "code-review", "hooks", "quality"]
+}
