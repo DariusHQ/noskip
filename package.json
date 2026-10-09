@@ -1,6 +1,6 @@
 {
   "name": "noskip",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Anti-cheat for AI coding agents. Catches Claude Code, Codex, Cursor and Gemini CLI when they skip, weaken or delete tests to make them pass.",
   "type": "module",
   "bin": {

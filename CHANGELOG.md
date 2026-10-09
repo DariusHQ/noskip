@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- First release on npm as `noskip` (1.0.0 could not be published).
+
 ## 1.0.0
 
 First release.
