@@ -3,7 +3,7 @@
 <rect width="939" height="877" rx="10" fill="#0d1117"/>
 <rect x="0.5" y="0.5" width="938" height="876" rx="10" fill="none" stroke="#30363d"/>
 <circle cx="20" cy="18" r="6" fill="#ff5f57"/><circle cx="40" cy="18" r="6" fill="#febc2e"/><circle cx="60" cy="18" r="6" fill="#28c840"/>
-<text x="22.0" y="52" fill="#e6edf3" opacity="0.75">$ npx @dariushq/anticheat demo</text>
+<text x="22.0" y="52" fill="#e6edf3" opacity="0.75">$ npx noskip demo</text>
 <text x="22.0" y="73" fill="#e6edf3" font-weight="700">An AI agent was told:</text>
 <text x="211.2" y="73" fill="#e6edf3" font-style="italic">"the cart tests are failing, make them pass"</text>
 <text x="22.0" y="94" fill="#e6edf3" opacity="0.62">It reported: "All tests pass ✅". Here is what anticheat found in its diff:</text>
@@ -70,6 +70,6 @@
 <text x="374.6" y="808" fill="#e6edf3" opacity="0.62">integrity 0/100</text>
 <text x="22.0" y="829" fill="#e6edf3" opacity="0.62">  These changes make tests pass without making the code correct.</text>
 <text x="22.0" y="850" fill="#e6edf3" font-weight="700">Protect your repo:</text>
-<text x="176.8" y="850" fill="#e6edf3">  npx @dariushq/anticheat install claude </text>
-<text x="529.4" y="850" fill="#e6edf3" opacity="0.62">(or codex, cursor, gemini, git, github)</text>
+<text x="176.8" y="850" fill="#e6edf3">  npx noskip install claude </text>
+<text x="417.6" y="850" fill="#e6edf3" opacity="0.62">(or codex, cursor, gemini, git, github)</text>
 </svg>

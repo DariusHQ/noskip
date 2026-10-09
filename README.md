@@ -8,7 +8,7 @@ Claude Code, Codex, Cursor and Gemini sometimes make a failing test "pass" by sk
 weakening the assertion or hardcoding the answer. **anticheat** catches it in the diff, sends the agent
 back to fix the real code, and keeps it out of your pull requests.
 
-[![npm](https://img.shields.io/npm/v/@dariushq/anticheat?color=cb3837&label=npm)](https://www.npmjs.com/package/@dariushq/anticheat)
+[![npm](https://img.shields.io/npm/v/noskip?color=cb3837&label=npm)](https://www.npmjs.com/package/noskip)
 [![ci](https://github.com/DariusHQ/anticheat/actions/workflows/ci.yml/badge.svg)](https://github.com/DariusHQ/anticheat/actions/workflows/ci.yml)
 ![dependencies](https://img.shields.io/badge/dependencies-0-2ea44f)
 ![network](https://img.shields.io/badge/network-none-2ea44f)
@@ -20,9 +20,11 @@ back to fix the real code, and keeps it out of your pull requests.
 
 ## Try it
 
+The npm package is [`noskip`](https://www.npmjs.com/package/noskip) (npm reserves the word "cheat").
+
 ```bash
-npx @dariushq/anticheat demo   # watch it catch a cheating agent in a throwaway repo
-npx @dariushq/anticheat        # scan your own uncommitted changes
+npx noskip demo   # watch it catch a cheating agent in a throwaway repo
+npx noskip        # scan your own uncommitted changes
 ```
 
 ## The problem
@@ -60,10 +62,10 @@ anticheat is the referee. It runs where the agent works and where you review, an
 **Codex · Cursor · Gemini CLI · Claude Code** (hooks):
 
 ```bash
-npx @dariushq/anticheat install codex     # .codex/hooks.json  (then trust it once in /hooks)
-npx @dariushq/anticheat install cursor    # .cursor/hooks.json
-npx @dariushq/anticheat install gemini    # .gemini/settings.json
-npx @dariushq/anticheat install claude    # .claude/settings.json
+npx noskip install codex     # .codex/hooks.json  (then trust it once in /hooks)
+npx noskip install cursor    # .cursor/hooks.json
+npx noskip install gemini    # .gemini/settings.json
+npx noskip install claude    # .claude/settings.json
 ```
 
 Add `--global` to protect every project on your machine.
@@ -73,7 +75,7 @@ Add `--global` to protect every project on your machine.
 **Any agent, any editor** (git pre-commit):
 
 ```bash
-npx @dariushq/anticheat install git
+npx noskip install git
 ```
 
 **Pull requests** (GitHub Action):
@@ -93,7 +95,7 @@ jobs:
 ```
 
 Findings appear as annotations on the exact lines of the PR, plus a job summary.
-`npx @dariushq/anticheat install github` writes this file for you.
+`npx noskip install github` writes this file for you.
 
 ## How it works
 
@@ -178,7 +180,7 @@ Exit codes: `0` nothing at or above `--fail-on`, `1` findings, `2` error.
 SARIF plugs into GitHub code scanning:
 
 ```yaml
-      - run: npx -y @dariushq/anticheat --base origin/main --head HEAD --format sarif --fail-on never > anticheat.sarif
+      - run: npx -y noskip --base origin/main --head HEAD --format sarif --fail-on never > anticheat.sarif
       - uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: anticheat.sarif

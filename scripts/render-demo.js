@@ -9,7 +9,7 @@ const outFile = fileURLToPath(new URL('../assets/demo.svg', import.meta.url));
 
 const res = spawnSync(process.execPath, [cli, 'demo'], { encoding: 'utf8', env: { ...process.env, FORCE_COLOR: '1' } });
 if (res.status !== 0) throw new Error(res.stderr);
-const lines = ('$ npx @dariushq/anticheat demo\n' + res.stdout.replace(/^\n/, '')).replace(/\n+$/, '').split('\n');
+const lines = ('$ npx noskip demo\n' + res.stdout.replace(/^\n/, '')).replace(/\n+$/, '').split('\n');
 
 const PALETTE = {
   fg: '#e6edf3',

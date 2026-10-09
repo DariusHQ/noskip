@@ -92,7 +92,7 @@ export function agentMessage(findings) {
     if (f.snippet) lines.push(`    ${f.snippet}`);
     if (f.hint) lines.push(`    fix: ${f.hint}`);
   }
-  if (findings.length > 12) lines.push(`- …and ${findings.length - 12} more (run \`npx @dariushq/anticheat\` to see all)`);
+  if (findings.length > 12) lines.push(`- …and ${findings.length - 12} more (run \`npx noskip\` to see all)`);
   lines.push(
     '',
     'Undo these shortcuts and fix the underlying code instead.',
@@ -107,7 +107,7 @@ export function userMessage(result) {
     .slice(0, 3)
     .map((f) => `${f.rule} ${f.path}:${f.line}`)
     .join(', ');
-  return `anticheat: ${counts.high} high, ${counts.medium} medium finding${counts.high + counts.medium === 1 ? '' : 's'} in this turn (${top}${findings.length > 3 ? ', …' : ''}). Review with: npx @dariushq/anticheat`;
+  return `anticheat: ${counts.high} high, ${counts.medium} medium finding${counts.high + counts.medium === 1 ? '' : 's'} in this turn (${top}${findings.length > 3 ? ', …' : ''}). Review with: npx noskip`;
 }
 
 // ---------- input parsing ----------

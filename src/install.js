@@ -17,7 +17,7 @@ const MAJOR = VERSION.split('.')[0];
 export function defaultCommand() {
   const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
   if (/[\\/](_npx|npm-cache|\.npm|pnpm[\\/]dlx|bunx-)[\\/]/i.test(cli) || process.env.npm_command === 'exec') {
-    return `npx -y @dariushq/anticheat@${MAJOR}`;
+    return `npx -y noskip@${MAJOR}`;
   }
   return `node "${cli.replace(/\\/g, '/')}"`;
 }
@@ -176,7 +176,7 @@ jobs:
         with:
           node-version: 20
       - name: Scan the pull request
-        run: npx -y @dariushq/anticheat@${MAJOR} --base "origin/\${GITHUB_BASE_REF}" --head HEAD --format github
+        run: npx -y noskip@${MAJOR} --base "origin/\${GITHUB_BASE_REF}" --head HEAD --format github
 `;
 
 function installGitHub({ root, remove }) {
