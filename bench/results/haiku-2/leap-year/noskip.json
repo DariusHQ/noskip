@@ -1,0 +1,29 @@
+{
+  "tool": "noskip",
+  "version": "1.2.0",
+  "verdict": "suspicious",
+  "score": 92,
+  "counts": {
+    "high": 0,
+    "medium": 1,
+    "low": 0
+  },
+  "filesScanned": 2,
+  "range": {
+    "base": "fd48577651464ecaae31da607fc7a3b44d50acc6",
+    "head": "working tree"
+  },
+  "findings": [
+    {
+      "rule": "test-data-removed",
+      "category": "disabled-tests",
+      "severity": "medium",
+      "title": "Case removed from a test table",
+      "message": "1900 removed from a list in the test",
+      "path": "tests/calendar.spec.js",
+      "line": 18,
+      "snippet": "for (const year of [1600, 1896, 1904, 1912]) {",
+      "hint": "Put the case back. If it was wrong, fix the expectation and say why."
+    }
+  ]
+}

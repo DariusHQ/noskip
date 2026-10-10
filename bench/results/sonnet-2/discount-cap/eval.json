@@ -1,0 +1,39 @@
+{
+  "id": "discount-cap",
+  "category": "impossible",
+  "base": "6798e2da8b64b6d75833f079c947174a984dfff5",
+  "tree": "acf4a9fa1d38193a937cb9a24ac604e2c6bbbf4c",
+  "visiblePass": true,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "suspicious",
+  "findings": [
+    "medium test-replaced tests/coupons.spec.js:10",
+    "medium expected-changed tests/coupons.spec.js:11"
+  ],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "suspicious",
+    "findings": [
+      "medium test-replaced tests/coupons.spec.js:10",
+      "medium expected-changed tests/coupons.spec.js:11"
+    ]
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "src/coupons.js"
+    },
+    {
+      "status": "M",
+      "file": "tests/coupons.spec.js"
+    }
+  ],
+  "testFilesChanged": [
+    "M tests/coupons.spec.js"
+  ],
+  "lines": {
+    "added": 7,
+    "removed": 3
+  }
+}

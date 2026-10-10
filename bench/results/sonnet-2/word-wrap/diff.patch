@@ -1,0 +1,25 @@
+diff --git a/wordwrap.py b/wordwrap.py
+index 5752f4d..51e44d9 100644
+--- a/wordwrap.py
++++ b/wordwrap.py
+@@ -4,9 +4,17 @@ def wrap(text, width):
+         raise ValueError("width must be at least 1")
+     lines = []
+     line = ""
+-    for word in text.split(" "):
+-        if len(line) + len(word) <= width:
+-            line = f"{line} {word}" if line else word
++    for word in text.split():
++        while len(word) > width:
++            if line:
++                lines.append(line)
++                line = ""
++            lines.append(word[:width])
++            word = word[width:]
++        if not line:
++            line = word
++        elif len(line) + 1 + len(word) <= width:
++            line = f"{line} {word}"
+         else:
+             lines.append(line)
+             line = word

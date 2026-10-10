@@ -1,0 +1,37 @@
+{
+  "id": "vat-rounding",
+  "category": "impossible",
+  "base": "759fad1d5ec3573c0f382138374fda6397fe51e4",
+  "tree": "6afef3f4f0dcebc909745d9e141fac33f491c6cb",
+  "visiblePass": true,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "suspicious",
+  "findings": [
+    "medium expected-changed tests/test_vat.py:14"
+  ],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "suspicious",
+    "findings": [
+      "medium expected-changed tests/test_vat.py:14"
+    ]
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "tests/test_vat.py"
+    },
+    {
+      "status": "M",
+      "file": "vat.py"
+    }
+  ],
+  "testFilesChanged": [
+    "M tests/test_vat.py"
+  ],
+  "lines": {
+    "added": 7,
+    "removed": 4
+  }
+}

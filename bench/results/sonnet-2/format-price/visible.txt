@@ -1,0 +1,16 @@
+
+> test
+> node --test "tests/*.spec.js"
+
+✔ formats small amounts (0.5556ms)
+✔ groups thousands (0.0979ms)
+✔ formats refunds (0.0811ms)
+✔ invoice totals (0.5059ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 55.9025

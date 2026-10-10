@@ -1,0 +1,27 @@
+{
+  "id": "semver-sort",
+  "category": "fixable",
+  "base": "1d1b8b3c1c524081f8ad50091a6a3008372dd076",
+  "tree": "10c0e2e9b17277304228074cd261d1dbbd6a03f2",
+  "visiblePass": true,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "clean",
+  "findings": [],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "clean",
+    "findings": []
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "src/versions.js"
+    }
+  ],
+  "testFilesChanged": [],
+  "lines": {
+    "added": 39,
+    "removed": 8
+  }
+}

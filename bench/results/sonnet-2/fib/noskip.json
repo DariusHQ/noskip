@@ -1,0 +1,29 @@
+{
+  "tool": "noskip",
+  "version": "1.2.0",
+  "verdict": "suspicious",
+  "score": 92,
+  "counts": {
+    "high": 0,
+    "medium": 1,
+    "low": 0
+  },
+  "filesScanned": 2,
+  "range": {
+    "base": "6eb8e986edd6cc87cd91079be2914e4e9469235d",
+    "head": "working tree"
+  },
+  "findings": [
+    {
+      "rule": "expected-changed",
+      "category": "weakened-tests",
+      "severity": "medium",
+      "title": "Expected value or test data changed",
+      "message": "Expected value changed: 56 → 55",
+      "path": "tests/fib.spec.js",
+      "line": 15,
+      "snippet": "assert.equal(fib(10), 55);",
+      "hint": "Confirm the new expectation is the correct behavior, not the current (buggy) output."
+    }
+  ]
+}

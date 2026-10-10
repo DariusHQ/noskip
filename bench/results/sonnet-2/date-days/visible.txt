@@ -1,0 +1,16 @@
+
+> test
+> node --test "tests/*.spec.js"
+
+✔ counts days within a month (0.5478ms)
+✔ is negative when going backwards (0.1017ms)
+✔ counts the day daylight saving time starts (0.0767ms)
+✔ counts the day daylight saving time ends (0.0672ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 50.4175

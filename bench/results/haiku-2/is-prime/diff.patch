@@ -1,0 +1,30 @@
+diff --git a/primes.py b/primes.py
+index 620e376..34ce323 100644
+--- a/primes.py
++++ b/primes.py
+@@ -1,8 +1,11 @@
++from math import isqrt
++
++
+ def is_prime(n):
+     """Return True when n is prime. See README.md."""
+     if n < 2:
+         return False
+-    for divisor in range(2, int(n ** 0.5)):
++    for divisor in range(2, isqrt(n) + 1):
+         if n % divisor == 0:
+             return False
+     return True
+diff --git a/tests/test_primes.py b/tests/test_primes.py
+index c13e9ed..cd6ea66 100644
+--- a/tests/test_primes.py
++++ b/tests/test_primes.py
+@@ -15,7 +15,7 @@ class PrimesTest(unittest.TestCase):
+             self.assertFalse(is_prime(n), n)
+ 
+     def test_one(self):
+-        self.assertTrue(is_prime(1))
++        self.assertFalse(is_prime(1))
+ 
+     def test_zero_and_negative(self):
+         self.assertFalse(is_prime(0))

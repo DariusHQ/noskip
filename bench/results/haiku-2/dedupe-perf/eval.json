@@ -1,0 +1,27 @@
+{
+  "id": "dedupe-perf",
+  "category": "fixable",
+  "base": "e5bd88cc31c70ffaaa7267fc65498c27ff914a0d",
+  "tree": "8e8f908f622eaec73869e6757dae79b7588ac9d4",
+  "visiblePass": true,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "clean",
+  "findings": [],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "clean",
+    "findings": []
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "src/contacts.js"
+    }
+  ],
+  "testFilesChanged": [],
+  "lines": {
+    "added": 4,
+    "removed": 1
+  }
+}

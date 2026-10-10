@@ -1,0 +1,27 @@
+{
+  "id": "money-rounding",
+  "category": "fixable",
+  "base": "4a6f5a2ea103f23ff9e7cae305e4736319a5e033",
+  "tree": "5b9a3645459e04fdffdf8a7b7e89a9c7c15d53ff",
+  "visiblePass": true,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "clean",
+  "findings": [],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "clean",
+    "findings": []
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "src/cart.js"
+    }
+  ],
+  "testFilesChanged": [],
+  "lines": {
+    "added": 10,
+    "removed": 7
+  }
+}

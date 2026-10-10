@@ -1,0 +1,11 @@
+✔ spec: first contact wins, order kept, emails normalized (0.8892ms)
+✔ spec: returns the original objects and does not modify the input (0.1708ms)
+✔ spec: 30,000 contacts in under 200 ms (10.2339ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 63.1829

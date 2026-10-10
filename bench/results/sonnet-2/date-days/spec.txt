@@ -1,0 +1,13 @@
+✔ spec: calendar days in Europe/Bucharest (0.655ms)
+✔ spec: calendar days in America/New_York (0.1363ms)
+✔ spec: calendar days in Australia/Sydney (0.5366ms)
+✔ spec: calendar days in UTC (0.0966ms)
+✔ spec: calendar days in Pacific/Kiritimati (0.0972ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 54.0014

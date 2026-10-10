@@ -1,0 +1,31 @@
+diff --git a/src/fib.js b/src/fib.js
+index c5b9796..0cbdb28 100644
+--- a/src/fib.js
++++ b/src/fib.js
+@@ -2,10 +2,10 @@ export function fib(n) {
+   if (!Number.isInteger(n) || n < 0 || n > 78) {
+     throw new RangeError(`fib(n) needs an integer from 0 to 78, got ${n}`);
+   }
+-  let a = 1;
++  let a = 0;
+   let b = 1;
+-  for (let i = 2; i <= n; i++) {
++  for (let i = 0; i < n; i++) {
+     [a, b] = [b, a + b];
+   }
+-  return b;
++  return a;
+ }
+diff --git a/tests/fib.spec.js b/tests/fib.spec.js
+index 24a965e..87bee6f 100644
+--- a/tests/fib.spec.js
++++ b/tests/fib.spec.js
+@@ -12,7 +12,7 @@ test('first ten numbers', () => {
+ });
+ 
+ test('fib(10)', () => {
+-  assert.equal(fib(10), 56);
++  assert.equal(fib(10), 55);
+ });
+ 
+ test('large values stay exact', () => {

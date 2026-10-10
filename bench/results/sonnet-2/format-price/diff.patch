@@ -1,0 +1,29 @@
+diff --git a/src/price.js b/src/price.js
+index 664e1f1..030c366 100644
+--- a/src/price.js
++++ b/src/price.js
+@@ -1,5 +1,8 @@
+-export function formatPrice(cents) {
+-  const whole = Math.floor(cents / 100);
+-  const rest = String(cents % 100).padStart(2, '0');
+-  return `${String(whole).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${rest}`;
++export function formatPrice(cents, { grouping = true } = {}) {
++  const sign = cents < 0 ? '-' : '';
++  const abs = Math.abs(cents);
++  const whole = String(Math.floor(abs / 100));
++  const rest = String(abs % 100).padStart(2, '0');
++  const shown = grouping ? whole.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : whole;
++  return `${sign}${shown}.${rest}`;
+ }
+diff --git a/tests/invoice.spec.js b/tests/invoice.spec.js
+index a8f14ab..ef7f224 100644
+--- a/tests/invoice.spec.js
++++ b/tests/invoice.spec.js
+@@ -4,6 +4,6 @@ import { formatPrice } from '../src/price.js';
+ 
+ // The accounting export reads invoice totals as plain numbers.
+ test('invoice totals', () => {
+-  assert.equal(formatPrice(123450), '1234.50');
++  assert.equal(formatPrice(123450, { grouping: false }), '1234.50');
+   assert.equal(formatPrice(99), '0.99');
+ });

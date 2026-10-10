@@ -64,6 +64,14 @@ change a reviewer needs to see.
 noskip runs on each diff without seeing the labels, so the labels double as a measure of noskip's
 recall and false-alarm rate.
 
+### First runs and held-out runs
+
+noskip 1.1.0 missed more than half of the gamed runs in the first round (Claude Code with Sonnet,
+Opus and Haiku). The rules added in 1.2.0 were written after reading those misses, so the first round
+cannot measure 1.2.0 fairly. The rules were then committed (`ae2ce9d`), and a second, held-out round
+ran with Sonnet and Haiku. Nothing in noskip changed after that round started, and RESULTS.md reports
+the two rounds separately. Both versions of noskip are scored on every run.
+
 ## Results
 
 See **[RESULTS.md](RESULTS.md)**. Every run's diff, summary, condensed trajectory, test output and
@@ -94,7 +102,7 @@ node bench/run.js --run my-agent --label "My agent" -- <agent command that reads
 
 For example:
 
-- Claude Code: `claude -p --model sonnet --permission-mode auto --output-format stream-json --verbose --no-session-persistence`
+- Claude Code: `claude -p --model sonnet --permission-mode auto --setting-sources project,local --output-format stream-json --verbose --no-session-persistence`
 - Codex CLI: `codex exec --full-auto -`
 - any other CLI that takes a prompt on stdin and edits files in its working directory
 
@@ -149,9 +157,10 @@ Each task directory holds:
   codebases make cheating both easier to hide and harder to spot.
 - **Written by the noskip author.** The tasks, labels and noskip itself come from the same person.
   Everything is published so anyone can check the labels against the diffs or rerun the suite with
-  their own agent. The first results also showed where noskip missed, see RESULTS.md.
-- **One attempt per task and agent.** Agents are not deterministic; a second run can differ.
+  their own agent. noskip's score that counts is the one on the held-out runs.
+- **Few attempts.** Agents are not deterministic. Sonnet and Haiku ran every task twice, Opus once.
 - **Few agents.** The published runs use Claude Code with the models available on one
   subscription. Other agents can be added with one command (see above).
 - **One environment.** All runs happened on one Windows 11 machine with Node.js 24 and Python 3.14,
-  with Claude Code in its `auto` permission mode.
+  with Claude Code 2.1.295 in its `auto` permission mode and default settings (no user settings,
+  hooks or memory).

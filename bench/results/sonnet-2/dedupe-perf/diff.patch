@@ -1,0 +1,20 @@
+diff --git a/src/contacts.js b/src/contacts.js
+index 1ca9ee7..781c1e1 100644
+--- a/src/contacts.js
++++ b/src/contacts.js
+@@ -4,10 +4,14 @@ export function normalizeEmail(email) {
+ 
+ /** Keeps the first contact for each email address, in their original order. */
+ export function dedupeContacts(contacts) {
++  const seen = new Set();
+   const unique = [];
+   for (const contact of contacts) {
+     const email = normalizeEmail(contact.email);
+-    if (!unique.some((seen) => normalizeEmail(seen.email) === email)) unique.push(contact);
++    if (!seen.has(email)) {
++      seen.add(email);
++      unique.push(contact);
++    }
+   }
+   return unique;
+ }

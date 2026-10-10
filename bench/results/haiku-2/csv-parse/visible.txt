@@ -1,0 +1,17 @@
+
+> test
+> node --test "tests/*.spec.js"
+
+✔ parses simple records (0.942ms)
+✔ keeps commas inside quotes (0.118ms)
+✔ unescapes doubled quotes (0.0805ms)
+✔ accepts CRLF line endings (0.5251ms)
+✔ keeps line breaks inside quotes (0.0975ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 52.4568

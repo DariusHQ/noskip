@@ -1,0 +1,29 @@
+{
+  "tool": "noskip",
+  "version": "1.1.0",
+  "verdict": "suspicious",
+  "score": 92,
+  "counts": {
+    "high": 0,
+    "medium": 1,
+    "low": 0
+  },
+  "filesScanned": 2,
+  "range": {
+    "base": "2439682a0818e73a6a796230222aec56c132414b",
+    "head": "working tree"
+  },
+  "findings": [
+    {
+      "rule": "expected-changed",
+      "category": "weakened-tests",
+      "severity": "medium",
+      "title": "Expected value in a test changed",
+      "message": "Expected value changed: ['fix bug', 'write docs', 'deploy'] → ['write docs', 'fix bug', 'deploy']",
+      "path": "tests/sort.spec.js",
+      "line": 31,
+      "snippet": "assert.deepEqual(sortBy(tasks, 'priority').map((t) => t.name), ['write docs', 'fix bug', 'deploy']);",
+      "hint": "Confirm the new expectation is the correct behavior, not the current (buggy) output."
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+diff --git a/tests/duration.spec.js b/tests/duration.spec.js
+new file mode 100644
+index 0000000..574f68e
+--- /dev/null
++++ b/tests/duration.spec.js
+@@ -0,0 +1,46 @@
++import assert from 'node:assert/strict';
++import { test } from 'node:test';
++import { formatDuration, parseDuration } from '../src/index.js';
++
++test('parses single-unit durations into seconds', () => {
++  assert.equal(parseDuration('90s'), 90);
++  assert.equal(parseDuration('5m'), 300);
++  assert.equal(parseDuration('2h'), 7200);
++  assert.equal(parseDuration('0s'), 0);
++});
++
++test('ignores surrounding whitespace when parsing', () => {
++  assert.equal(parseDuration('  3m  '), 180);
++});
++
++test('rejects malformed durations', () => {
++  assert.throws(() => parseDuration('10'), /invalid duration: 10/);
++  assert.throws(() => parseDuration('1h30m'), /invalid duration: 1h30m/);
++  assert.throws(() => parseDuration('5d'), /invalid duration: 5d/);
++  assert.throws(() => parseDuration(''), /invalid duration/);
++});
++
++test('formats seconds into compact h/m/s strings', () => {
++  assert.equal(formatDuration(0), '0s');
++  assert.equal(formatDuration(45), '45s');
++  assert.equal(formatDuration(120), '2m');
++  assert.equal(formatDuration(3600), '1h');
++  assert.equal(formatDuration(3661), '1h1m1s');
++  assert.equal(formatDuration(7260), '2h1m');
++});
++
++test('round-trips with parseDuration for whole-unit values', () => {
++  for (const text of ['1h', '15m', '59s', '1h1m1s']) {
++    const seconds = text.match(/\d+[hms]/g).reduce(
++      (total, part) => total + parseDuration(part),
++      0,
++    );
++    assert.equal(formatDuration(seconds), text);
++  }
++});
++
++test('rejects negative, fractional, and non-numeric seconds', () => {
++  assert.throws(() => formatDuration(-1), /invalid seconds: -1/);
++  assert.throws(() => formatDuration(1.5), /invalid seconds: 1.5/);
++  assert.throws(() => formatDuration('60'), /invalid seconds: 60/);
++});

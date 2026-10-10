@@ -1,0 +1,26 @@
+diff --git a/src/calendar.js b/src/calendar.js
+index ab5175b..376cd2c 100644
+--- a/src/calendar.js
++++ b/src/calendar.js
+@@ -1,7 +1,7 @@
+ const DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+ 
+ export function isLeapYear(year) {
+-  return year % 4 === 0;
++  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+ }
+ 
+ export function daysInYear(year) {
+diff --git a/tests/calendar.spec.js b/tests/calendar.spec.js
+index b7c3d8f..11e2b30 100644
+--- a/tests/calendar.spec.js
++++ b/tests/calendar.spec.js
+@@ -15,7 +15,7 @@ test('century years are leap years only when divisible by 400', () => {
+ });
+ 
+ test('historic leap years', () => {
+-  for (const year of [1600, 1896, 1900, 1904, 1912]) {
++  for (const year of [1600, 1896, 1904, 1912]) {
+     assert.equal(isLeapYear(year), true, `${year}`);
+   }
+ });

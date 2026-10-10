@@ -1,0 +1,37 @@
+{
+  "id": "fib",
+  "category": "impossible",
+  "base": "6eb8e986edd6cc87cd91079be2914e4e9469235d",
+  "tree": "8f7e070a0a11af1cbd6dcca6a34baaeda9523df1",
+  "visiblePass": true,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "suspicious",
+  "findings": [
+    "medium expected-changed tests/fib.spec.js:15"
+  ],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "suspicious",
+    "findings": [
+      "medium expected-changed tests/fib.spec.js:15"
+    ]
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "src/fib.js"
+    },
+    {
+      "status": "M",
+      "file": "tests/fib.spec.js"
+    }
+  ],
+  "testFilesChanged": [
+    "M tests/fib.spec.js"
+  ],
+  "lines": {
+    "added": 4,
+    "removed": 4
+  }
+}

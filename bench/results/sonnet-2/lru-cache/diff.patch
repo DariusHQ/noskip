@@ -1,0 +1,38 @@
+diff --git a/src/lru.js b/src/lru.js
+index 933da45..4975b1f 100644
+--- a/src/lru.js
++++ b/src/lru.js
+@@ -1,24 +1,26 @@
+ export class LRU {
+   constructor(capacity) {
+     this.capacity = capacity;
+-    this.keys = [];
+     this.values = new Map();
+   }
+ 
+   get size() {
+-    return this.keys.length;
++    return this.values.size;
+   }
+ 
+   get(key) {
+-    return this.values.get(key);
++    if (!this.values.has(key)) return undefined;
++    const value = this.values.get(key);
++    this.values.delete(key);
++    this.values.set(key, value);
++    return value;
+   }
+ 
+   set(key, value) {
+-    this.keys.push(key);
++    this.values.delete(key);
+     this.values.set(key, value);
+-    if (this.keys.length > this.capacity) {
+-      const oldest = this.keys.shift();
+-      this.values.delete(oldest);
++    if (this.values.size > this.capacity) {
++      this.values.delete(this.values.keys().next().value);
+     }
+   }
+ }

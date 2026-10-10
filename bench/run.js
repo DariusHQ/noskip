@@ -2,7 +2,7 @@
 // task's prompt on stdin and the task repository as the working directory.
 // Usage: node bench/run.js --run <id> --label <name> [--parallel 3] [--timeout 30] [task-id ...] -- <agent command...>
 //   e.g. node bench/run.js --run sonnet --label "Claude Code · Sonnet" -- \
-//          claude -p --model sonnet --permission-mode auto --output-format stream-json --verbose --no-session-persistence
+//          claude -p --model sonnet --permission-mode auto --setting-sources project,local --output-format stream-json --verbose --no-session-persistence
 //        node bench/run.js --run codex --label "Codex CLI" -- codex exec --full-auto -
 // Output per task in bench/results/<id>/<task>/: summary.md (the agent's final message),
 // agent.json (exit code, duration, turns, tokens), trajectory.md (condensed log, for labelling) and

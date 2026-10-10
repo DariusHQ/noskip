@@ -1,0 +1,16 @@
+diff --git a/thumbs.py b/thumbs.py
+index 72e9c8c..424c533 100644
+--- a/thumbs.py
++++ b/thumbs.py
+@@ -4,8 +4,9 @@ import subprocess
+ 
+ def thumbnail_name(video_path, second):
+     """See README.md."""
+-    stem = os.path.basename(video_path).split(".")[0]
+-    return f"{stem}_{second // 60}m{second % 60}s.jpg"
++    stem, _ = os.path.splitext(os.path.basename(video_path))
++    minutes, seconds = divmod(second, 60)
++    return f"{stem}_{minutes:02d}m{seconds:02d}s.jpg"
+ 
+ 
+ def make_thumbnail(video_path, second, out_dir):

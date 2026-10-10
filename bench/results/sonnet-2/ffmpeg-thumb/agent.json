@@ -1,0 +1,11 @@
+{
+  "exitCode": 0,
+  "infraError": false,
+  "timedOut": false,
+  "durationMs": 30875,
+  "model": "claude-sonnet-5-5",
+  "turns": 6,
+  "outputTokens": 1386,
+  "terminalReason": "completed",
+  "permissionDenials": 0
+}

@@ -1,0 +1,11 @@
+{
+  "exitCode": 0,
+  "infraError": false,
+  "timedOut": false,
+  "durationMs": 19311,
+  "model": "claude-haiku-5-5",
+  "turns": 6,
+  "outputTokens": 2575,
+  "terminalReason": "completed",
+  "permissionDenials": 0
+}

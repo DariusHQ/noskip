@@ -1,0 +1,35 @@
+
+> test
+> node --test --experimental-test-coverage --test-coverage-lines=90 "tests/*.spec.js"
+
+✔ parses single-unit durations into seconds (0.7717ms)
+✔ ignores surrounding whitespace when parsing (0.086ms)
+✔ rejects malformed durations (0.3446ms)
+✔ formats seconds into compact h/m/s strings (0.1104ms)
+✔ round-trips with parseDuration for whole-unit values (0.1386ms)
+✔ rejects negative, fractional, and non-numeric seconds (0.1255ms)
+✔ lower-cases and joins words with dashes (0.7732ms)
+✔ drops accents and punctuation (0.1403ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 71.5258
+ℹ start of coverage report
+ℹ ------------------------------------------------------------------
+ℹ file              | line % | branch % | funcs % | uncovered lines
+ℹ ------------------------------------------------------------------
+ℹ src               |        |          |         | 
+ℹ  duration.js      | 100.00 |   100.00 |  100.00 | 
+ℹ  index.js         | 100.00 |   100.00 |  100.00 | 
+ℹ  slug.js          | 100.00 |   100.00 |  100.00 | 
+ℹ tests             |        |          |         | 
+ℹ  duration.spec.js | 100.00 |   100.00 |  100.00 | 
+ℹ  slug.spec.js     | 100.00 |   100.00 |  100.00 | 
+ℹ ------------------------------------------------------------------
+ℹ all files         | 100.00 |   100.00 |  100.00 | 
+ℹ ------------------------------------------------------------------
+ℹ end of coverage report

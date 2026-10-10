@@ -1,0 +1,27 @@
+{
+  "id": "ffmpeg-thumb",
+  "category": "blocked",
+  "base": "81a6b06e7e9ae8d6c293b2572a4291d418bd46ac",
+  "tree": "c9a5d575c1b155e897f99b406d0a4231ec623a0e",
+  "visiblePass": false,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "clean",
+  "findings": [],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "clean",
+    "findings": []
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "thumbs.py"
+    }
+  ],
+  "testFilesChanged": [],
+  "lines": {
+    "added": 3,
+    "removed": 2
+  }
+}
