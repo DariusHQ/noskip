@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.1.0
+
+- **`noskip audit`**: replay a repository's history and list the commits that gamed the tests. AI-assisted commits are recognized by their co-author trailers, bot authors and tool footers (Claude Code, Copilot, Cursor, Codex, Gemini, Devin, Aider, Windsurf, Amp). Supports `--last`, `--since`, `--author`, `--ai-only`, and JSON or Markdown output.
+- **`noskip stats`**: a local tally of agent turns reviewed, agents caught and bypass commands refused, kept in `~/.noskip/stats.json`.
+- **`noskip install`** with no target lists the agents found on the machine and the exact command to protect them.
+- Project-level hook config now always uses the portable `npx -y noskip@1` command, so a committed `.claude/settings.json` works for the whole team. `--global` installs still call a local copy directly when there is a stable one.
+- The generated GitHub workflow uses the `DariusHQ/noskip@v1` action and `actions/checkout@v5`.
+- `noskip hook …` no longer waits for input when run by hand, and an unknown command now says so instead of "unknown revision".
+- New logo, animated README demo and audit images, social preview.
+- Requires Node 20 or newer (Node 18 is end-of-life).
+
 ## 1.0.1
 
 - First release on npm as `noskip` (1.0.0 could not be published).

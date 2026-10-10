@@ -30,7 +30,12 @@ src/rules/config.js   CI, coverage, strictness, tampering
 src/hooks.js          agent hook protocols (Claude Code, Codex, Gemini CLI, Cursor)
 src/commands.js       shell commands refused before they run
 src/install.js        install / uninstall into agent configs, git hooks, workflows
+src/audit.js          `noskip audit`: replay history, detect AI-assisted commits
+src/stats.js          local tally behind `noskip stats`
+scripts/              README images (render-assets.js) and the social preview
 ```
+
+After changing output formats, regenerate the README images with `npm run assets`.
 
 ## Adding a rule
 

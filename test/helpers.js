@@ -5,7 +5,10 @@ import { git } from '../src/git.js';
 import { scan } from '../src/scan.js';
 import { removeDir } from '../src/util.js';
 
-export const GIT_CFG = ['-c', 'user.name=test', '-c', 'user.email=test@example.com', '-c', 'commit.gpgsign=false', '-c', 'core.autocrlf=false'];
+// Keep stats written by hooks under test out of the real ~/.noskip.
+process.env.NOSKIP_HOME ??= mkdtempSync(path.join(os.tmpdir(), 'noskip-home-'));
+
+export const GIT_CFG =['-c', 'user.name=test', '-c', 'user.email=test@example.com', '-c', 'commit.gpgsign=false', '-c', 'core.autocrlf=false'];
 
 export function write(root, files) {
   for (const [rel, content] of Object.entries(files)) {

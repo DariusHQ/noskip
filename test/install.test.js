@@ -79,7 +79,7 @@ describe('install', () => {
       const wf = readFileSync(path.join(root, '.github', 'workflows', 'noskip.yml'), 'utf8');
       assert.match(wf, /pull_request/);
       assert.match(wf, /fetch-depth: 0/);
-      assert.match(wf, /--base "origin\/\$\{GITHUB_BASE_REF\}"/);
+      assert.match(wf, /uses: DariusHQ\/noskip@v\d+/);
     }));
 
   test('unknown targets and unparsable settings are reported', () =>

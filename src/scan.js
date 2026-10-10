@@ -76,18 +76,24 @@ export function allowedByCommits(root, oldCommit, newCommit) {
   if (res.status !== 0) return allowed;
   for (const entry of res.stdout.split('\x1e')) {
     const [sha, body = ''] = entry.trim().split('\0');
-    for (const m of body.matchAll(ALLOW_TRAILER)) {
-      let rest = m[1].trim();
-      const ids = [];
-      for (;;) {
-        const id = /^([a-z][\w-]*)\s*,?\s*/.exec(rest);
-        if (!id || !RULES_BY_ID.has(id[1])) break;
-        ids.push(id[1]);
-        rest = rest.slice(id[0].length);
-      }
-      const reason = rest.replace(/^[-–—:(]+\s*/, '').replace(/\s*\)$/, '').trim();
-      for (const id of ids) if (!allowed.has(id)) allowed.set(id, { commit: sha.slice(0, 7), reason });
+    parseAllowTrailers(body, sha, allowed);
+  }
+  return allowed;
+}
+
+/** Add the rules a commit message signs off on to `allowed` (first sign-off per rule wins). */
+export function parseAllowTrailers(body, sha, allowed = new Map()) {
+  for (const m of body.matchAll(ALLOW_TRAILER)) {
+    let rest = m[1].trim();
+    const ids = [];
+    for (;;) {
+      const id = /^([a-z][\w-]*)\s*,?\s*/.exec(rest);
+      if (!id || !RULES_BY_ID.has(id[1])) break;
+      ids.push(id[1]);
+      rest = rest.slice(id[0].length);
     }
+    const reason = rest.replace(/^[-–—:(]+\s*/, '').replace(/\s*\)$/, '').trim();
+    for (const id of ids) if (!allowed.has(id)) allowed.set(id, { commit: sha.slice(0, 7), reason });
   }
   return allowed;
 }

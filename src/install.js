@@ -10,15 +10,18 @@ export const TARGETS = ['claude', 'codex', 'gemini', 'cursor', 'git', 'github'];
 const OURS = /\bnoskip\b/;
 const MAJOR = VERSION.split('.')[0];
 
+export const NPX_COMMAND = `npx -y noskip@${MAJOR}`;
+
 /**
- * How hooks should launch noskip. A stable checkout or global install gets a direct
- * `node <path>` call (fast); a throwaway npx cache falls back to `npx`.
+ * How hooks should launch noskip.
+ * - Project config is usually committed and shared, so it gets the portable `npx` form.
+ * - A user-level (--global) install from a stable location (global npm install, checkout)
+ *   gets a direct `node <path>` call, which skips npm's startup on every hook.
  */
-export function defaultCommand() {
+export function defaultCommand({ global = false } = {}) {
   const cli = fileURLToPath(new URL('./cli.js', import.meta.url));
-  if (/[\\/](_npx|npm-cache|\.npm|pnpm[\\/]dlx|bunx-)[\\/]/i.test(cli) || process.env.npm_command === 'exec') {
-    return `npx -y noskip@${MAJOR}`;
-  }
+  const ephemeral = /[\\/](_npx|npm-cache|\.npm|pnpm[\\/]dlx|bunx-[^\\/]*)[\\/]/i.test(cli) || process.env.npm_command === 'exec';
+  if (!global || ephemeral) return NPX_COMMAND;
   return `node "${cli.replace(/\\/g, '/')}"`;
 }
 
@@ -169,14 +172,10 @@ jobs:
     name: Catch test-gaming changes
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Scan the pull request
-        run: npx -y noskip@${MAJOR} --base "origin/\${GITHUB_BASE_REF}" --head HEAD --format github
+      - uses: DariusHQ/noskip@v${MAJOR}
 `;
 
 function installGitHub({ root, remove }) {
@@ -188,7 +187,20 @@ function installGitHub({ root, remove }) {
   return { target: 'github', file, changed: true, note: 'Commit the workflow; it runs on every pull request.' };
 }
 
-export function install(target, { root, global = false, command = defaultCommand(), remove = false } = {}) {
+/** Which agents look present on this machine / in this project. */
+export function detectTargets(root, home = os.homedir()) {
+  const has = (...parts) => parts.some((p) => p && existsSync(p));
+  const found = [];
+  if (has(path.join(home, '.claude'), root && path.join(root, '.claude'), root && path.join(root, 'CLAUDE.md'))) found.push('claude');
+  if (has(path.join(home, '.codex'), root && path.join(root, '.codex'), root && path.join(root, 'AGENTS.md'))) found.push('codex');
+  if (has(path.join(home, '.cursor'), root && path.join(root, '.cursor'))) found.push('cursor');
+  if (has(path.join(home, '.gemini'), root && path.join(root, '.gemini'), root && path.join(root, 'GEMINI.md'))) found.push('gemini');
+  if (root) found.push('git');
+  if (root && has(path.join(root, '.github'))) found.push('github');
+  return found;
+}
+
+export function install(target, { root, global = false, command = defaultCommand({ global }), remove = false } = {}) {
   if (!TARGETS.includes(target)) throw new Error(`unknown target "${target}". Choose from: ${TARGETS.join(', ')}`);
   if (target === 'git') {
     if (!root) throw new Error('not inside a git repository');

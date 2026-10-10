@@ -10,6 +10,7 @@ import { DEFAULT_CONFIG } from './config.js';
 import { gitPath, headTree, repoRoot, worktreeTree } from './git.js';
 import { requestedRules } from './intent.js';
 import { loadConfig, scanTrees } from './scan.js';
+import { recordStats } from './stats.js';
 import { atLeast } from './util.js';
 
 export const AGENTS = ['claude', 'codex', 'gemini', 'cursor'];
@@ -162,13 +163,18 @@ function onStop(agent, input, root) {
     config = { ...DEFAULT_CONFIG }; // a broken config must not wedge the agent; scan with defaults
   }
   const result = scanTrees({ root, oldTree, newTree, config, prompt: state?.prompt });
+  const retried = Boolean(input.stop_hook_active) || (agent === 'cursor' && Number(input.loop_count) > 0);
+  const repo = path.basename(root);
+  if (!retried) recordStats('turn', { agent, repo });
   if (!result.findings.length) return allow(agent, 'stop');
 
   const failOn = result.failOn ?? 'high';
-  const retried = Boolean(input.stop_hook_active) || (agent === 'cursor' && Number(input.loop_count) > 0);
   // Without a baseline we can't tell this turn's edits from earlier ones, so only warn.
   const blocking = state ? result.findings.filter((f) => atLeast(f.severity, failOn)) : [];
-  if (blocking.length && !retried) return block(agent, agentMessage(result.findings.filter((f) => f.severity !== 'low')));
+  if (blocking.length && !retried) {
+    recordStats('caught', { agent, repo, rules: blocking.map((f) => f.rule) });
+    return block(agent, agentMessage(result.findings.filter((f) => f.severity !== 'low')));
+  }
   if (result.counts.high + result.counts.medium === 0) return allow(agent, 'stop');
   return notify(agent, userMessage(result));
 }
@@ -185,6 +191,7 @@ function onPreTool(agent, input) {
   }
   const state = root ? loadState(root, sessionIdOf(input)) : null;
   if (requestedRules(state?.prompt).has(hit.rule)) return allow(agent, 'pretool');
+  recordStats('refused', { agent, repo: root ? path.basename(root) : undefined, rules: [hit.rule] });
   return deny(
     agent,
     `noskip blocked this command: ${hit.message}. Fix what the checks report instead. If the user explicitly wants this, ask them to run it themselves.`,

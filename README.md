@@ -1,29 +1,39 @@
 <div align="center">
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
+  <img src="assets/logo-light.svg" alt="noskip logo" width="104">
+</picture>
+
 # noskip
 
-### Your AI agent says all tests pass. Did it cheat?
+**Your AI agent says all tests pass. Did it cheat?**
 
-Claude Code, Codex, Cursor and Gemini sometimes make a failing test "pass" by skipping it, deleting it,
-weakening the assertion or hardcoding the answer. **noskip** catches it in the diff, sends the agent
-back to fix the real code, and keeps it out of your pull requests.
+noskip catches Claude Code, Codex, Cursor and Gemini when they make a failing test "pass" by skipping it,
+deleting it, weakening the assertion, hardcoding the answer or switching CI off. It sends the agent back
+to fix the real code, and keeps the shortcut out of your pull requests.
 
 [![npm](https://img.shields.io/npm/v/noskip?color=cb3837&label=npm)](https://www.npmjs.com/package/noskip)
 [![ci](https://github.com/DariusHQ/noskip/actions/workflows/ci.yml/badge.svg)](https://github.com/DariusHQ/noskip/actions/workflows/ci.yml)
-![dependencies](https://img.shields.io/badge/dependencies-0-2ea44f)
-![network](https://img.shields.io/badge/network-none-2ea44f)
-[![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+![dependencies: 0](https://img.shields.io/badge/dependencies-0-2ea44f)
+![runs offline](https://img.shields.io/badge/network-none-2ea44f)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-<img src="assets/demo.svg" alt="noskip catching six shortcuts in an AI agent's diff" width="840">
+[Try it](#try-it-in-10-seconds) · [Audit your history](#has-your-agent-already-cheated) · [Install](#install) · [What it catches](#what-it-catches) · [How it works](#how-it-works) · [FAQ](#faq)
+
+<img src="assets/demo.svg" alt="noskip demo: an agent told to make failing tests pass skipped a test, weakened an assertion, hardcoded an answer, deleted a test, lowered coverage and masked CI. noskip flags all six." width="860">
 
 </div>
 
-## Try it
+## Try it in 10 seconds
 
 ```bash
-npx noskip demo   # watch it catch a cheating agent in a throwaway repo
-npx noskip        # scan your own uncommitted changes
+npx noskip demo     # watch it catch a cheating agent in a throwaway repo
+npx noskip audit    # has an agent already cheated in this repo's history?
+npx noskip          # check your uncommitted changes
 ```
+
+No install, no config, no account. Nothing leaves your machine.
 
 ## The problem
 
@@ -44,13 +54,36 @@ Ask an agent to *"make the failing tests pass"* and sometimes it does exactly th
 
 Then it reports *"✅ All tests pass"*, and technically it's right. AI labs call this **reward hacking**
 and document it in their own model cards. It is easy to miss in a 600-line diff at 2am, and a line in
-`CLAUDE.md` asking it not to is a suggestion, not a guarantee.
+`CLAUDE.md` asking the agent not to is a suggestion, not a guarantee.
 
 noskip is the referee. It runs where the agent works and where you review, and it doesn't negotiate.
 
+## Has your agent already cheated?
+
+`noskip audit` replays your git history and shows every commit that gamed the tests, and which of them
+an AI wrote: Claude Code, Copilot, Cursor, Codex, Gemini, Devin, Aider and more, recognized by their
+co-author trailers, bot accounts and footers.
+
+<div align="center">
+<img src="assets/audit.svg" alt="noskip audit on an example repository: three AI-assisted commits gamed the tests (a skipped test and a weakened assertion by Claude Code, a masked CI step by Copilot, a hardcoded answer by Cursor) and one human commit changed an expected value." width="860">
+</div>
+
+```bash
+npx noskip audit --last 500           # look further back (default: 100 commits)
+npx noskip audit --ai-only            # only commits with an AI co-author
+npx noskip audit --since "1 month ago"
+npx noskip audit --format markdown    # paste the report into an issue or PR
+```
+
 ## Install
 
-**Claude Code** (plugin):
+```bash
+npx noskip install
+```
+
+Lists the agents it finds on your machine and the exact command to protect them. Or pick directly:
+
+**Claude Code** (plugin, recommended):
 
 ```
 /plugin marketplace add DariusHQ/noskip
@@ -68,8 +101,6 @@ npx noskip install claude    # .claude/settings.json
 
 Add `--global` to protect every project on your machine.
 
-**Prevention, not just detection** (Agent Skill): [`skills/noskip`](skills/noskip/SKILL.md) teaches the agent the rules up front and has it run the self-check before it says "done". The Claude Code plugin includes it; for other agents use your skill manager, e.g. `npx skills add DariusHQ/noskip`.
-
 **Any agent, any editor** (git pre-commit):
 
 ```bash
@@ -86,7 +117,7 @@ jobs:
   noskip:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - uses: DariusHQ/noskip@v1
@@ -95,7 +126,25 @@ jobs:
 Findings appear as annotations on the exact lines of the PR, plus a job summary.
 `npx noskip install github` writes this file for you.
 
+**Prevention, not just detection** (Agent Skill): [`skills/noskip`](skills/noskip/SKILL.md) teaches the agent the rules up front and has it run the self-check before it says "done". The Claude Code plugin includes it; for other agents use your skill manager, e.g. `npx skills add DariusHQ/noskip`.
+
 ## How it works
+
+```mermaid
+sequenceDiagram
+    participant You
+    participant Agent as AI agent
+    participant noskip
+    You->>Agent: "the checkout tests fail, fix them"
+    Agent->>noskip: prompt hook
+    noskip-->>noskip: snapshot the working tree
+    Agent->>Agent: edits code, adds it.skip(...)
+    Agent->>noskip: stop hook: "done, all tests pass"
+    noskip-->>Agent: skip-added at test/checkout.test.ts:42. Fix the code, not the test.
+    Agent->>Agent: removes the skip, fixes the real bug
+    Agent->>noskip: stop hook
+    noskip-->>You: clean
+```
 
 1. **You send a prompt.** noskip snapshots the working tree as a git tree object. Your files, index and HEAD are untouched.
 2. **The agent tries to finish.** noskip diffs the snapshot against the current state and runs [26 rules](docs/rules.md) over what changed.
@@ -154,23 +203,59 @@ If the user explicitly asked for one of these changes, keep it and say so plainl
 | 🟡 | [`error-swallowed`](docs/rules.md#error-swallowed) | New `catch {}` / `except: pass` in production code |
 | 🟡 | [`type-suppressed`](docs/rules.md#type-suppressed) | `@ts-ignore`, `# type: ignore`, `@SuppressWarnings` |
 | 🟡 | [`strictness-reduced`](docs/rules.md#strictness-reduced) | `"strict": false`, lint rules off, mypy relaxed |
-| 🟡 | [`ignore-marker-added`](docs/rules.md#ignore-marker-added) | An `noskip-ignore` comment appeared |
+| 🟡 | [`ignore-marker-added`](docs/rules.md#ignore-marker-added) | A `noskip-ignore` comment appeared |
 | ⚪ | [`snapshot-changed`](docs/rules.md#snapshot-changed) | Snapshots rewritten (🟡 when no code changed) |
 | ⚪ | [`lint-suppressed`](docs/rules.md#lint-suppressed) | `eslint-disable`, `# noqa`, `//nolint` |
 | ⚪ | [`any-cast`](docs/rules.md#any-cast) | `as any` |
 
 Languages: JavaScript, TypeScript, Python, Go, Rust, Java, Kotlin, C#, Ruby, PHP, Swift, Dart, C/C++, Elixir.
 
+## How does noskip compare?
+
+| | noskip | "Never skip tests" in `CLAUDE.md` / `AGENTS.md` | Code review | Coverage gate |
+|---|:---:|:---:|:---:|:---:|
+| Stops the agent before it says "done" | ✅ | a request it may ignore | ❌ | ❌ |
+| Catches skipped, deleted and weakened tests | ✅ | ❌ | if you spot them | rarely |
+| Catches hardcoded answers and test-only branches | ✅ | ❌ | if you spot them | ❌ |
+| Catches CI checks switched off | ✅ | ❌ | if you spot them | ❌ |
+| Same verdict every time, offline, free | ✅ | ✅ | ❌ | ✅ |
+
+Use them together: noskip doesn't replace review, it makes sure the tests you review still test something.
+
+## How often do your agents cheat?
+
+The agent hooks keep a tally on your machine. `npx noskip stats` shows it:
+
+```text
+noskip stats  since 2026-10-01
+
+  Agent turns that changed code     412
+  Caught gaming the tests             9  2.2% of turns
+  Bypass commands refused             2
+
+  Favorite tricks
+    skip-added           ████████████ 4
+    matcher-weakened     ██████       2
+    hardcoded-answer     ███          1
+
+  Caught by agent   Claude Code 7 · Cursor 2
+```
+
+<sub>Example output. Your numbers live in `~/.noskip/stats.json` and are never uploaded.</sub>
+
 ## CLI
 
 ```text
-noskip [<rev>]             scan HEAD (or <rev>) → working tree, untracked files included
-noskip --staged            scan only what is staged (pre-commit)
-noskip --base main         scan everything since the merge-base with main (pull requests)
-noskip --format json       also: markdown, github, sarif
-noskip --fail-on medium    stricter exit code (default: high)
-noskip rules               list every rule
-noskip demo                see it in action
+noskip [<rev>]               scan HEAD (or <rev>) → working tree, untracked files included
+noskip --staged              scan only what is staged (pre-commit)
+noskip --base main           scan everything since the merge-base with main (pull requests)
+noskip audit [<ref>]         replay history: --last <n>, --since <date>, --author <who>, --ai-only
+noskip install [<target>]    claude · codex · cursor · gemini · git · github (none: show what's detected)
+noskip stats                 how often your agents got caught
+noskip --format json         also: markdown, github, sarif
+noskip --fail-on medium      stricter exit code (default: high)
+noskip rules                 list every rule
+noskip demo                  see it in action
 ```
 
 Exit codes: `0` nothing at or above `--fail-on`, `1` findings, `2` error.
@@ -207,7 +292,7 @@ Adding a marker is reported too, so an agent can't use it quietly. Details in [d
 ## FAQ
 
 **Does my code leave my machine?**
-No. noskip is one zero-dependency Node package that talks to your local `git`. No network calls, no LLM, no telemetry.
+No. noskip is one zero-dependency Node package that talks to your local `git`. No network calls, no LLM, no telemetry. Stats stay in `~/.noskip/stats.json`.
 
 **Will it get in the way of legitimate work?**
 It only looks at what changed. Moved or re-indented lines, renamed tests and tests split across files are not reported. A returned constant only counts as "hardcoded" inside a new special case, and environment-guarded skips (`skipUnless(os.name == "nt")`) are only flagged for review. Medium findings never block. If your prompt asked for the change, it is reported but not blocked.
@@ -226,11 +311,14 @@ Do that too. Instructions are suggestions; hooks are enforcement. The git hook a
 **Can the agent turn it off?**
 It can try. Config comes from the base revision, edits to noskip or hook config are flagged, and `--no-verify`, `noskip uninstall` and friends are refused. CI is the final referee.
 
+**How does `audit` know a commit was written by AI?**
+Only from explicit signals: a co-author trailer (`Co-Authored-By: Claude …`, `Co-authored-by: Copilot …`), a bot author (`claude[bot]`, `copilot-swe-agent[bot]`, `devin-ai-integration[bot]`, …) or a tool footer (`🤖 Generated with …`). It never guesses from code style. Everything else is listed as "human".
+
 **Does it replace code review?**
 No. It catches one common class of shortcut, so your review time goes to everything else.
 
 **Requirements?**
-Node 18+ and git. macOS, Linux and Windows.
+Node 20+ and git. macOS, Linux and Windows.
 
 ## Show that your repo plays fair
 
@@ -243,8 +331,11 @@ Node 18+ and git. macOS, Linux and Windows.
 ## Contributing
 
 Caught your agent cheating in a way noskip missed? That is the most useful issue you can open:
-[paste the diff](https://github.com/DariusHQ/noskip/issues/new?template=new-cheat.yml). See [CONTRIBUTING.md](CONTRIBUTING.md) to add a rule.
+[paste the diff](https://github.com/DariusHQ/noskip/issues/new?template=new-cheat.yml). Every report makes the rules sharper
+for everyone. See [CONTRIBUTING.md](CONTRIBUTING.md) to add a rule yourself.
+
+If noskip caught one of your agents red-handed, a ⭐ helps other developers find it.
 
 ## License
 
-MIT
+[MIT](LICENSE)

@@ -57,6 +57,22 @@ export function resolveTree(root, rev) {
   return res.status === 0 ? res.stdout.trim() : null;
 }
 
+/** Resolve many revisions to tree ids in one process. Returns Map<rev, treeId|null>. */
+export function resolveTrees(root, revs) {
+  const unique = [...new Set(revs)].filter((r) => r && !/[\n\r]/.test(r));
+  const result = new Map();
+  if (!unique.length) return result;
+  const out = git(['cat-file', '--batch-check=%(objectname) %(objecttype)'], {
+    cwd: root,
+    input: unique.map((r) => `${r}^{tree}`).join('\n') + '\n',
+  }).stdout.split('\n');
+  unique.forEach((r, i) => {
+    const m = /^([0-9a-f]+) tree$/.exec(out[i] ?? '');
+    result.set(r, m ? m[1] : null);
+  });
+  return result;
+}
+
 export function emptyTree(root) {
   return git(['mktree'], { cwd: root, input: '' }).stdout.trim();
 }
