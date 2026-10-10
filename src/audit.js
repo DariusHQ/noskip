@@ -4,23 +4,56 @@ import { git, readBlobs, resolveCommit, resolveTrees } from './git.js';
 import { parseAllowTrailers, scanTrees } from './scan.js';
 import { HOMEPAGE, makeColors, plural, truncate, VERSION } from './util.js';
 
-// Only explicit signals: co-author trailers, bot authors, tool footers. No guessing from style.
-const AI_SIGNS = [
-  ['Claude Code', /co-authored-by:\s*claude\b|noreply@anthropic\.com|generated with \[?claude|^claude\[bot\]/im],
-  ['Copilot', /co-authored-by:[^\n]*\bcopilot\b|copilot-swe-agent|^copilot\b[^\n]*<[^>]*copilot/im],
-  ['Cursor', /co-authored-by:\s*cursor\b|cursoragent@cursor\.com|^cursor agent\b/im],
-  ['Codex', /co-authored-by:[^\n]*\bcodex\b|chatgpt-codex-connector|codex@openai\.com/im],
-  ['Gemini', /co-authored-by:[^\n]*\bgemini\b|gemini-code-assist|google-labs-jules|jules@google/im],
-  ['Devin', /devin-ai-integration|co-authored-by:\s*devin\b/im],
-  ['Aider', /co-authored-by:\s*aider\b|^aider: /im],
-  ['Windsurf', /co-authored-by:\s*(?:windsurf|cascade)\b/im],
-  ['Amp', /co-authored-by:\s*amp\b|ampcode\.com/im],
-  ['AI', /🤖 generated with|^ai-assisted:\s*yes\b/im],
+// Tool names, matched against the *name* in a trailer or bot account (never an email domain:
+// a person with an @openai.com address is not Codex).
+const TOOLS = [
+  ['Claude Code', /\bclaude\b/i],
+  ['Copilot', /\bcopilot\b/i],
+  ['Codex', /\bcodex\b|\bchatgpt\b/i],
+  ['Cursor', /\bcursor\b/i],
+  ['Gemini', /\bgemini\b|\bjules\b/i],
+  ['Devin', /\bdevin\b/i],
+  ['Aider', /\baider\b/i],
+  ['Windsurf', /\bwindsurf\b|\bcascade\b/i],
+  ['OpenCode', /\bopen\s?code\b/i],
+  ['Amp', /^amp\b|\bampcode\b/i],
+  ['Kiro', /\bkiro\b/i],
+  ['Junie', /\bjunie\b/i],
+  ['OpenHands', /\bopenhands\b/i],
+  ['Grok', /\bgrok\b/i],
+  ['Qwen Code', /\bqwen\b/i],
+];
+const TOOL_EMAILS = [
+  ['Claude Code', /noreply@anthropic\.com/i],
+  ['Cursor', /cursoragent@cursor\.com/i],
+  ['Copilot', /\+copilot@users\.noreply\.github\.com/i],
 ];
 
+const toolIn = (name) => TOOLS.find(([, re]) => re.test(name))?.[0] ?? null;
+
+/**
+ * Which AI tool a commit credits, from explicit signals only: co-author / assisted-by trailers,
+ * a bot author, or a tool footer. Never guessed from the code or the writing style.
+ */
 export function detectAgent(author, message) {
-  const text = `${author}\n${message}`;
-  for (const [name, re] of AI_SIGNS) if (re.test(text)) return name;
+  let declared = false;
+  for (const m of message.matchAll(/^(co-authored-by|assisted-by|generated-by|co-developed-by|ai-assisted-by):[ \t]*([^\n]+)$/gim)) {
+    const [name, email = ''] = m[2].split('<');
+    const hit = toolIn(name) ?? TOOL_EMAILS.find(([, re]) => re.test(email))?.[0];
+    if (hit) return hit;
+    // "Assisted-by" / "Generated-by" credit tools by convention (Linux kernel, Node.js), never people.
+    if (/^(assisted-by|generated-by|ai-assisted-by)$/i.test(m[1])) declared = true;
+  }
+  if (declared) return 'AI';
+  const bot = /^([\w.-]+)\[bot\]/i.exec(author);
+  if (bot) {
+    const hit = toolIn(bot[1].replace(/[-_]/g, ' '));
+    if (hit) return hit;
+  }
+  const footer = /(?:🤖\s*)?generated with \[?([^\]\n(]+)/i.exec(message);
+  if (footer) return toolIn(footer[1]) ?? (/🤖/.test(message) ? 'AI' : null);
+  if (/^aider: /im.test(message)) return 'Aider';
+  if (/^ai-assisted:[ \t]*(?:yes|true)\b/im.test(message)) return 'AI';
   return null;
 }
 

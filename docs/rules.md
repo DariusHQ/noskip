@@ -62,7 +62,7 @@ Recognized: `it/test/describe.skip`, `xit`, `xdescribe`, `test.fixme` (JS/TS) ·
 
 ## test-replaced
 
-🟡 medium. A test was removed and a differently named one appeared in the same file. Often a harmless rename; sometimes a hard test swapped for an easy one.
+🟡 medium. A test was removed and a differently named one appeared: in the same file (a rename), or in another test file under a similar name (a split or move, e.g. "aborts on invalid callback return values" → "aborts on fractional callback return values"). Often harmless; sometimes a hard test swapped for an easy one. A removed test whose only "replacement" is unrelated (say, `it('works')`) stays a 🔴 [test-removed](#test-removed).
 
 ## tautology-added
 

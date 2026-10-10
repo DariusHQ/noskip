@@ -89,11 +89,19 @@ describe('AI commit detection', () => {
     ['devin-ai-integration[bot] <x@users.noreply.github.com>', 'fix', 'Devin'],
     ['google-labs-jules[bot] <x@users.noreply.github.com>', 'fix', 'Gemini'],
     ['Dev <d@x.io>', 'aider: fix the parser', 'Aider'],
+    ['Dev <d@x.io>', 'test: split coverage\n\nSigned-off-by: Dev <d@x.io>\nAssisted-by: Codex\nReviewed-By: Ana <a@x.io>', 'Codex'],
+    ['Dev <d@x.io>', 'fix\n\nAssisted-by: Claude:claude-opus-4', 'Claude Code'],
+    ['Dev <d@x.io>', 'fix\n\nGenerated-by: GitHub Copilot', 'Copilot'],
+    ['Dev <d@x.io>', 'fix\n\nAssisted-by: Opencode/Opus', 'OpenCode'],
+    ['Dev <d@x.io>', 'fix\n\nAssisted-by: a closed-source coding agent', 'AI'],
   ];
   for (const [author, message, agent] of cases) test(`${agent}: ${message.split('\n').pop().slice(0, 40)}`, () => assert.equal(detectAgent(author, message), agent));
 
   test('ordinary commits are human', () => {
     assert.equal(detectAgent('Dev <d@x.io>', 'Add Claude Code plugin support'), null);
     assert.equal(detectAgent('Dev <d@x.io>', 'Co-authored-by: Ana <ana@x.io>'), null);
+    assert.equal(detectAgent('Dev <d@x.io>', 'fix\n\nCo-authored-by: John Smith <john@openai.com>'), null);
+    assert.equal(detectAgent('Dev <d@x.io>', 'docs: describe the cursor API'), null);
+    assert.equal(detectAgent('dependabot[bot] <x@users.noreply.github.com>', 'Bump lodash'), null);
   });
 });

@@ -61,8 +61,9 @@ noskip is the referee. It runs where the agent works and where you review, and i
 ## Has your agent already cheated?
 
 `noskip audit` replays your git history and shows every commit that gamed the tests, and which of them
-an AI wrote: Claude Code, Copilot, Cursor, Codex, Gemini, Devin, Aider and more, recognized by their
-co-author trailers, bot accounts and footers.
+an AI wrote: Claude Code, Codex, Copilot, Cursor, OpenCode, Gemini, Devin, Aider and more, recognized by
+their `Co-authored-by` / `Assisted-by` trailers, bot accounts and footers. (Try it on Node.js: a third of
+its last 1,000 commits credit an AI tool.)
 
 <div align="center">
 <img src="assets/audit.svg" alt="noskip audit on an example repository: three AI-assisted commits gamed the tests (a skipped test and a weakened assertion by Claude Code, a masked CI step by Copilot, a hardcoded answer by Cursor) and one human commit changed an expected value." width="860">
@@ -297,7 +298,7 @@ No. noskip is one zero-dependency Node package that talks to your local `git`. N
 **Will it get in the way of legitimate work?**
 It only looks at what changed. Moved or re-indented lines, renamed tests and tests split across files are not reported. A returned constant only counts as "hardcoded" inside a new special case, and environment-guarded skips (`skipUnless(os.name == "nt")`) are only flagged for review. Medium findings never block. If your prompt asked for the change, it is reported but not blocked.
 
-We replayed the last 1,000 commits of the [Node.js](https://github.com/nodejs/node) repository, written by humans, through noskip: 9 of them (0.9%) got a blocking finding, and every one was a real deletion of a test or an assertion. That's a change worth one line of sign-off, which you give in the commit message:
+We replayed the last 1,000 commits of the [Node.js](https://github.com/nodejs/node) repository through `noskip audit`: 8 of them (0.8%) got a blocking finding, and every one really removed a test or an assertion, for example when a feature was dropped or tests were consolidated. That's a change worth one line of sign-off, which you give in the commit message:
 
 ```text
 Noskip-Allow: test-removed (the --jitless flag no longer exists)
@@ -312,7 +313,7 @@ Do that too. Instructions are suggestions; hooks are enforcement. The git hook a
 It can try. Config comes from the base revision, edits to noskip or hook config are flagged, and `--no-verify`, `noskip uninstall` and friends are refused. CI is the final referee.
 
 **How does `audit` know a commit was written by AI?**
-Only from explicit signals: a co-author trailer (`Co-Authored-By: Claude …`, `Co-authored-by: Copilot …`), a bot author (`claude[bot]`, `copilot-swe-agent[bot]`, `devin-ai-integration[bot]`, …) or a tool footer (`🤖 Generated with …`). It never guesses from code style. Everything else is listed as "human".
+Only from explicit signals: a trailer (`Co-Authored-By: Claude …`, `Co-authored-by: Copilot …`, `Assisted-by: Codex`), a bot author (`claude[bot]`, `copilot-swe-agent[bot]`, `devin-ai-integration[bot]`, …) or a tool footer (`🤖 Generated with …`). Co-author names are matched against tool names, never email domains, so a person is never labeled as a bot. It never guesses from code style. Everything else is listed as "human".
 
 **Does it replace code review?**
 No. It catches one common class of shortcut, so your review time goes to everything else.

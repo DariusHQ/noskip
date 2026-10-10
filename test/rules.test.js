@@ -168,6 +168,27 @@ describe('removed tests', () => {
     assert.deepEqual(rules(r), []);
   });
 
+  test('a test rewritten into another file under a similar name is a replacement', () => {
+    const before = "test('ffi aborts on invalid callback return values', () => {\n  assert.throws(() => run('bad'));\n});\n\ntest('ffi loads a library', () => {\n  assert.ok(load());\n});\n";
+    const r = scenario(
+      { 'test/ffi/test-calls.js': before },
+      {
+        'test/ffi/test-calls.js': "test('ffi loads a library', () => {\n  assert.ok(load());\n});\n",
+        'test/ffi/test-callback-abort.js': "test('ffi aborts on fractional callback return values', () => {\n  assert.throws(() => run(1.5));\n});\n",
+      },
+    );
+    assert.deepEqual(r.findings.map((f) => [f.rule, f.severity]), [['test-replaced', 'medium']]);
+    assert.match(r.findings[0].message, /in test\/ffi\/test-callback-abort\.js/);
+  });
+
+  test('deleting a hard test and adding an unrelated easy one elsewhere is still a removal', () => {
+    const r = scenario(base, {
+      'test/math.test.js': JS_TEST.replace(/\n  it\('rejects division by zero'[\s\S]*?\n  \}\);\n/, '\n'),
+      'test/smoke.test.js': "it('works', () => {\n  expect(add(1, 1)).toBe(2);\n});\n",
+    });
+    assert.ok(rules(r).includes('test-removed'), JSON.stringify(rules(r)));
+  });
+
   test('renaming a test is reported as a replacement, not a removal', () => {
     const r = scenario(base, { 'test/math.test.js': JS_TEST.replace("it('adds'", "it('adds two numbers'") });
     assert.deepEqual(rules(r), ['test-replaced']);

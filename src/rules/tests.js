@@ -81,6 +81,25 @@ function countAssertions(lines) {
   return n;
 }
 
+const NAME_STOPWORDS = new Set(['a', 'an', 'the', 'is', 'are', 'it', 'to', 'of', 'on', 'in', 'and', 'or', 'when', 'if', 'with', 'for', 'should', 'be', 'not', 'still', 'that', 'does', 'do', 'test']);
+
+function nameTokens(name) {
+  return new Set(name.toLowerCase().split(/[^a-z0-9]+/).filter((t) => t.length > 1 && !NAME_STOPWORDS.has(t)));
+}
+
+/**
+ * Do two test names describe the same behavior? Used to tell a test that was split or moved
+ * to another file under a new name from one that simply disappeared.
+ */
+export function similarNames(a, b) {
+  const A = nameTokens(a);
+  const B = nameTokens(b);
+  if (!A.size || !B.size) return false;
+  let shared = 0;
+  for (const t of A) if (B.has(t)) shared++;
+  return shared >= 2 && shared / Math.min(A.size, B.size) >= 0.5;
+}
+
 /** Map a line number in the old file to the closest line in the new file. */
 export function oldToNewLine(file, oldLine) {
   let offset = 0;
@@ -284,7 +303,12 @@ export const testRules = [
     title: 'Test case replaced by a different one',
     hint: 'Check that the new test still covers what the old one did.',
     checkAll(ctx) {
-      return ctx.testDiff.replaced.map(({ file, from, to, line }) => ({ file, line, message: `Test “${from}” was replaced by “${to}”`, snippet: to }));
+      return ctx.testDiff.replaced.map(({ file, from, to, where, line }) => ({
+        file,
+        line,
+        message: `Test “${from}” was replaced by “${to}”${where ? ` in ${where}` : ''}`,
+        snippet: to,
+      }));
     },
   },
   {
@@ -306,7 +330,9 @@ export const testRules = [
       }
       for (const file of testFiles(ctx)) {
         if (file.status === 'A' || file.status === 'D') continue;
+        // Already explained: a removed test, or a test rewritten into another file.
         if (ctx.testDiff.removedIn.has(file.path)) continue;
+        if (ctx.testDiff.replaced.some((r) => r.file === file && r.where)) continue;
         const before = countAssertions(file.oldLines);
         const after = countAssertions(file.newLines);
         if (after >= before) continue;
@@ -432,26 +458,43 @@ export function analyzeTests(ctx) {
       return false;
     });
   }
-  for (const { file, removed, added, oldCount } of perFile) {
+  for (const { file, removed, oldCount } of perFile) {
     if (file.status === 'D') {
       // All of its tests moved elsewhere: a legitimate reorganization.
       if (removed.length > 0 || oldCount === 0) {
         result.deletedFiles.push({ file, names: removed.map((r) => r.name) });
         result.removedIn.add(file.path);
       }
-      continue;
     }
+  }
+  // Tests still unaccounted for. A removed test that a similarly named new test replaces is
+  // reported as replaced: in the same file (a rename), or in another file (a split or move).
+  const addedIn = (pred) => perFile.filter((e) => e.file.status !== 'D' && pred(e.file)).flatMap((e) => e.added.map((a) => ({ ...a, file: e.file })));
+  const take = (list, pick) => {
+    const i = list.findIndex((a) => (addedPool.get(a.name) ?? 0) > 0 && pick(a));
+    if (i < 0) return null;
+    const [hit] = list.splice(i, 1);
+    addedPool.set(hit.name, addedPool.get(hit.name) - 1);
+    return hit;
+  };
+  for (const { file, removed } of perFile) {
+    if (file.status === 'D') continue;
+    const own = addedIn((f) => f === file);
+    const elsewhere = addedIn((f) => f !== file);
     for (const r of removed) {
       const oldLine = lineOfIndex(file.oldText, r.index);
-      const line = oldToNewLine(file, oldLine);
-      const source = file.oldLines?.[oldLine - 1] !== undefined ? truncate(file.oldLines[oldLine - 1]) : undefined;
-      const idx = added.findIndex((a) => (addedPool.get(a.name) ?? 0) > 0);
-      if (idx >= 0) {
-        const replacement = added.splice(idx, 1)[0];
-        addedPool.set(replacement.name, addedPool.get(replacement.name) - 1);
-        result.replaced.push({ file, from: r.name, to: replacement.name, line: lineOfIndex(file.newText, replacement.index) });
+      const replacement = take(own, () => true) ?? take(elsewhere, (a) => similarNames(r.name, a.name));
+      if (replacement) {
+        result.replaced.push({
+          file,
+          from: r.name,
+          to: replacement.name,
+          where: replacement.file === file ? null : replacement.file.path,
+          line: lineOfIndex(file.newText, replacement.index),
+        });
       } else {
-        result.removed.push({ file, name: r.name, line, source });
+        const source = file.oldLines?.[oldLine - 1] !== undefined ? truncate(file.oldLines[oldLine - 1]) : undefined;
+        result.removed.push({ file, name: r.name, line: oldToNewLine(file, oldLine), source });
         result.removedIn.add(file.path);
       }
     }

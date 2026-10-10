@@ -4,7 +4,7 @@ import { globToRegExp } from '../src/config.js';
 import { classify, testStem } from '../src/classify.js';
 import { parseDiff, unquote } from '../src/diff.js';
 import { requestedRules } from '../src/intent.js';
-import { parseAssertion } from '../src/rules/tests.js';
+import { parseAssertion, similarNames } from '../src/rules/tests.js';
 
 describe('diff parser', () => {
   test('modified file with -U0 hunks', () => {
@@ -135,6 +135,19 @@ describe('assertion parsing', () => {
     assert.deepEqual(parseAssertion('assert total(cart) == 42, "msg"'), { kind: 'py', subject: 'total(cart)', matcher: '==', args: '42' });
     assert.deepEqual(parseAssertion('want:  12,'), { kind: 'kv', subject: 'want', matcher: 'kv', args: '12' });
     assert.equal(parseAssertion('const total = 5;'), null);
+  });
+});
+
+describe('test name similarity', () => {
+  test('same behavior, new wording', () => {
+    assert.ok(similarNames('ffi aborts on invalid callback return values', 'ffi aborts on fractional callback return values'));
+    assert.ok(similarNames('function() rejects a non-integer length', 'throws if function.length is not an integer'));
+    assert.ok(similarNames('aggregate() rejects a non-integer step length', 'throws if options.step.length is not an integer'));
+  });
+  test('different behavior', () => {
+    assert.ok(!similarNames('rejects division by zero', 'works'));
+    assert.ok(!similarNames('a normal function length is still accepted', 'throws if options.inverse.length is not an integer'));
+    assert.ok(!similarNames('adds', 'adds'.repeat(0)));
   });
 });
 
