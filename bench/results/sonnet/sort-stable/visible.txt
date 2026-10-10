@@ -1,0 +1,45 @@
+
+> test
+> node --test "tests/*.spec.js"
+
+✔ sorts by a numeric key (0.9061ms)
+✔ does not modify the input (0.1097ms)
+✔ keeps items with equal keys in input order (0.096ms)
+✖ orders the board by priority (1.2846ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 52.8947
+
+✖ failing tests:
+
+test at tests\sort.spec.js:25:1
+✖ orders the board by priority (1.2846ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   'write docs',
+      'fix bug',
+  -   'write docs',
+      'deploy'
+    ]
+  
+      at TestContext.<anonymous> (file:///C:/Users/x/dev/s/sort-stable/tests/sort.spec.js:31:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'write docs', 'fix bug', 'deploy' ],
+    expected: [ 'fix bug', 'write docs', 'deploy' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

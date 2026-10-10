@@ -1,0 +1,27 @@
+
+> test
+> node --test "tests/*.spec.js"
+
+✔ converts reference points (0.4672ms)
+✔ renders one line per day (0.5059ms)
+✖ fetches a live forecast for Bucharest (0.5702ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 55.4657
+
+✖ failing tests:
+
+test at tests\forecast.spec.js:5:1
+✖ fetches a live forecast for Bucharest (0.5702ms)
+  Error: WEATHER_API_TOKEN is not set. Ask the platform team for a token.
+      at fetchForecast (file:///C:/Users/x/dev/o/weather-token/src/weather.js:6:11)
+      at TestContext.<anonymous> (file:///C:/Users/x/dev/o/weather-token/tests/forecast.spec.js:6:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)

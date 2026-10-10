@@ -1,0 +1,76 @@
+
+> test
+> node --test "tests/*.spec.js"
+
+✖ creates and finds a user (2.8012ms)
+✖ returns null for unknown emails (0.4882ms)
+✖ rejects duplicate emails (0.0891ms)
+✔ accepts real names (1.5079ms)
+✔ rejects invalid names (0.1258ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 2
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 82.0603
+
+✖ failing tests:
+
+test at tests\users.spec.js:18:1
+✖ creates and finds a user (2.8012ms)
+  AggregateError [ECONNREFUSED]: 
+      at C:\Users\x\dev\h\pg-repo\node_modules\pg-pool\index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async migrate (file:///C:/Users/x/dev/h/pg-repo/src/db.js:8:3)
+      at async TestContext.<anonymous> (file:///C:/Users/x/dev/h/pg-repo/tests/users.spec.js:10:3)
+      at async TestHook.run (node:internal/test_runner/test:1409:7) {
+    code: 'ECONNREFUSED',
+    [errors]: [
+      Error: connect ECONNREFUSED 127.0.0.1:5432
+          at createConnectionError (node:net:2062:14)
+          at afterConnectMultiple (node:net:2092:16),
+      Error: connect ECONNREFUSED ::1:5432
+          at createConnectionError (node:net:2062:14)
+          at afterConnectMultiple (node:net:2092:16)
+    ]
+  }
+
+test at tests\users.spec.js:24:1
+✖ returns null for unknown emails (0.4882ms)
+  AggregateError [ECONNREFUSED]: 
+      at C:\Users\x\dev\h\pg-repo\node_modules\pg-pool\index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async migrate (file:///C:/Users/x/dev/h/pg-repo/src/db.js:8:3)
+      at async TestContext.<anonymous> (file:///C:/Users/x/dev/h/pg-repo/tests/users.spec.js:10:3)
+      at async TestHook.run (node:internal/test_runner/test:1409:7) {
+    code: 'ECONNREFUSED',
+    [errors]: [
+      Error: connect ECONNREFUSED 127.0.0.1:5432
+          at createConnectionError (node:net:2062:14)
+          at afterConnectMultiple (node:net:2092:16),
+      Error: connect ECONNREFUSED ::1:5432
+          at createConnectionError (node:net:2062:14)
+          at afterConnectMultiple (node:net:2092:16)
+    ]
+  }
+
+test at tests\users.spec.js:28:1
+✖ rejects duplicate emails (0.0891ms)
+  AggregateError [ECONNREFUSED]: 
+      at C:\Users\x\dev\h\pg-repo\node_modules\pg-pool\index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async migrate (file:///C:/Users/x/dev/h/pg-repo/src/db.js:8:3)
+      at async TestContext.<anonymous> (file:///C:/Users/x/dev/h/pg-repo/tests/users.spec.js:10:3)
+      at async TestHook.run (node:internal/test_runner/test:1409:7) {
+    code: 'ECONNREFUSED',
+    [errors]: [
+      Error: connect ECONNREFUSED 127.0.0.1:5432
+          at createConnectionError (node:net:2062:14)
+          at afterConnectMultiple (node:net:2092:16),
+      Error: connect ECONNREFUSED ::1:5432
+          at createConnectionError (node:net:2062:14)
+          at afterConnectMultiple (node:net:2092:16)
+    ]
+  }

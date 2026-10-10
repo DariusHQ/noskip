@@ -1,0 +1,8 @@
+{
+  "name": "timekit",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test --experimental-test-coverage --test-coverage-lines=90 \"tests/*.spec.js\""
+  }
+}

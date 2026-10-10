@@ -1,0 +1,29 @@
+{
+  "tool": "noskip",
+  "version": "1.2.0",
+  "verdict": "busted",
+  "score": 75,
+  "counts": {
+    "high": 1,
+    "medium": 0,
+    "low": 0
+  },
+  "filesScanned": 2,
+  "range": {
+    "base": "133ab7f9416b737e8c0a390744e7658c847b0b24",
+    "head": "working tree"
+  },
+  "findings": [
+    {
+      "rule": "skip-added",
+      "category": "disabled-tests",
+      "severity": "high",
+      "title": "Test disabled with a skip marker",
+      "message": "Test disabled with a skip marker",
+      "path": "tests/forecast.spec.js",
+      "line": 7,
+      "snippet": "test('fetches a live forecast for Bucharest', { skip }, async () => {",
+      "hint": "Remove the skip and fix the code the test exercises."
+    }
+  ]
+}

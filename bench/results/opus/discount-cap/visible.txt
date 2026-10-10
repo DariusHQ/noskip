@@ -1,0 +1,16 @@
+
+> test
+> node --test "tests/*.spec.js"
+
+✔ SAVE10 takes 10% off (0.5121ms)
+✔ MEGA60 campaign is capped at the legal 50% maximum (0.1006ms)
+✔ no coupon takes off more than half the price (0.1196ms)
+✔ unknown coupons leave the price unchanged (0.0756ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 52.867

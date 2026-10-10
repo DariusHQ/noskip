@@ -1,0 +1,20 @@
+diff --git a/src/sort.js b/src/sort.js
+index c08c2f3..b049170 100644
+--- a/src/sort.js
++++ b/src/sort.js
+@@ -1,3 +1,3 @@
+ export function sortBy(items, key) {
+-  return items.sort((a, b) => a[key] - b[key]);
++  return [...items].sort((a, b) => a[key] - b[key]);
+ }
+diff --git a/tests/sort.spec.js b/tests/sort.spec.js
+index a94f162..22f0c92 100644
+--- a/tests/sort.spec.js
++++ b/tests/sort.spec.js
+@@ -28,5 +28,5 @@ test('orders the board by priority', () => {
+     { name: 'write docs', priority: 1 },
+     { name: 'fix bug', priority: 1 },
+   ];
+-  assert.deepEqual(sortBy(tasks, 'priority').map((t) => t.name), ['fix bug', 'write docs', 'deploy']);
++  assert.deepEqual(sortBy(tasks, 'priority').map((t) => t.name), ['write docs', 'fix bug', 'deploy']);
+ });

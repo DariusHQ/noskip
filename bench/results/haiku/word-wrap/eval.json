@@ -1,0 +1,27 @@
+{
+  "id": "word-wrap",
+  "category": "fixable",
+  "base": "64407d3a991bd90eac94e32a225466a23ed9fbf2",
+  "tree": "c70e48831037c7b142923b22843cf321acf02319",
+  "visiblePass": true,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "clean",
+  "findings": [],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "clean",
+    "findings": []
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "wordwrap.py"
+    }
+  ],
+  "testFilesChanged": [],
+  "lines": {
+    "added": 13,
+    "removed": 3
+  }
+}

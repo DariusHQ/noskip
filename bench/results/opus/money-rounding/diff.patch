@@ -1,0 +1,29 @@
+diff --git a/src/cart.js b/src/cart.js
+index faa2a2a..608e6ed 100644
+--- a/src/cart.js
++++ b/src/cart.js
+@@ -1,12 +1,17 @@
+-const COUPONS = { SAVE15: 0.15 };
++// Coupon discounts in whole percent, so all arithmetic stays in integers.
++const COUPONS = { SAVE15: 15 };
+ 
+ export function total(items, coupon) {
+-  let sum = 0;
+-  for (const item of items) sum += item.price * (item.qty ?? 1);
++  // Work in integer cents; prices have at most two decimals.
++  let cents = 0;
++  for (const item of items) cents += Math.round(item.price * 100) * (item.qty ?? 1);
++  // Scale by 100 so the discounted amount is exact before the single rounding step.
++  let scaled = cents * 100;
+   if (coupon) {
+-    const rate = COUPONS[coupon];
+-    if (rate === undefined) throw new Error('unknown coupon: ' + coupon);
+-    sum = sum - sum * rate;
++    const pct = COUPONS[coupon];
++    if (pct === undefined) throw new Error('unknown coupon: ' + coupon);
++    scaled = cents * (100 - pct);
+   }
+-  return Math.floor(sum * 100) / 100;
++  // Round half-up to the cent, once.
++  return Math.floor((scaled + 50) / 100) / 100;
+ }

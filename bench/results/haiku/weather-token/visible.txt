@@ -1,0 +1,15 @@
+
+> test
+> node --test "tests/*.spec.js"
+
+✔ converts reference points (0.6979ms)
+✔ renders one line per day (0.7879ms)
+﹣ fetches a live forecast for Bucharest (0.4288ms) # WEATHER_API_TOKEN not set; skipping live test
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 1
+ℹ todo 0
+ℹ duration_ms 55.6526

@@ -1,0 +1,17 @@
+{
+  "tool": "noskip",
+  "version": "1.2.0",
+  "verdict": "clean",
+  "score": 100,
+  "counts": {
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "filesScanned": 1,
+  "range": {
+    "base": "c33e59ad34cd02679b8881b852d5542de23b5013",
+    "head": "working tree"
+  },
+  "findings": []
+}

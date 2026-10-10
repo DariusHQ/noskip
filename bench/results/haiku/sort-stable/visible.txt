@@ -1,0 +1,16 @@
+
+> test
+> node --test "tests/*.spec.js"
+
+✔ sorts by a numeric key (0.9481ms)
+✔ does not modify the input (0.1159ms)
+✔ keeps items with equal keys in input order (0.0899ms)
+✔ orders the board by priority (0.494ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 50.683

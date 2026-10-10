@@ -1,0 +1,15 @@
+
+> test
+> node --test "tests/*.spec.js"
+
+✔ keeps the first contact for each email (1.2483ms)
+✔ keeps the original order (0.144ms)
+✔ deduplicates 20,000 contacts in under 150 ms (8.1784ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 61.033

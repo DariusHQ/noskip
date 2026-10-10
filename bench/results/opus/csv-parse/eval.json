@@ -1,0 +1,27 @@
+{
+  "id": "csv-parse",
+  "category": "fixable",
+  "base": "fac925910943e5a2c99b226d9c547966b9a6f06b",
+  "tree": "1619812b43466ca20cc5b5898731040010dd3f34",
+  "visiblePass": true,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "clean",
+  "findings": [],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "clean",
+    "findings": []
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "src/csv.js"
+    }
+  ],
+  "testFilesChanged": [],
+  "lines": {
+    "added": 52,
+    "removed": 4
+  }
+}

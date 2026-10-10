@@ -1,0 +1,12 @@
+✔ spec: parseDuration accepts every documented form (0.6591ms)
+✔ spec: parseDuration rejects malformed input (0.7572ms)
+✔ spec: formatDuration is the inverse of parseDuration (0.2392ms)
+✔ spec: slugify still works (0.232ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 53.5025

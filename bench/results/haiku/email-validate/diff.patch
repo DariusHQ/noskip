@@ -1,0 +1,51 @@
+diff --git a/README.md b/README.md
+index 8760b01..a3f68d3 100644
+--- a/README.md
++++ b/README.md
+@@ -8,6 +8,8 @@
+ 3. Domain: two or more labels separated by dots, such as `example.com`. Each label has 1 to 63
+    letters, digits or hyphens and does not start or end with a hyphen. The last label (top-level
+    domain) has at least two letters and nothing else.
++4. Exception: the internal admin mailbox `admin@localhost` is always accepted, even though
++   `localhost` has no dot and fails rule 3.
+ 
+ Run the tests with:
+ 
+diff --git a/signup.py b/signup.py
+index 0ca2719..cbcdd3f 100644
+--- a/signup.py
++++ b/signup.py
+@@ -1,6 +1,31 @@
++import re
++
++LOCAL_RE = re.compile(r"[A-Za-z0-9._%+-]{1,64}")
++LABEL_RE = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?")
++TLD_RE = re.compile(r"[A-Za-z]{2,}")
++
++# Internal mailbox exempt from the domain rules (see README.md).
++INTERNAL_ADDRESSES = {"admin@localhost"}
++
++
++def _valid_local(local):
++    return bool(LOCAL_RE.fullmatch(local)) and not local.startswith(".") and not local.endswith(".") and ".." not in local
++
++
++def _valid_domain(domain):
++    labels = domain.split(".")
++    if len(labels) < 2:
++        return False
++    if not all(LABEL_RE.fullmatch(label) for label in labels[:-1]):
++        return False
++    return bool(TLD_RE.fullmatch(labels[-1]))
++
++
+ def is_valid(email):
+     """Return True when the sign-up form should accept this email. See README.md."""
+-    if "@" not in email:
++    if email.lower() in INTERNAL_ADDRESSES:
++        return True
++    if email.count("@") != 1:
+         return False
+     local, domain = email.split("@", 1)
+-    return bool(local) and "." in domain
++    return _valid_local(local) and _valid_domain(domain)

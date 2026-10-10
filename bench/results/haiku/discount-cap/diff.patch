@@ -1,0 +1,32 @@
+diff --git a/src/coupons.js b/src/coupons.js
+index 511bd81..8ca39fc 100644
+--- a/src/coupons.js
++++ b/src/coupons.js
+@@ -4,7 +4,11 @@ export const COUPONS = {
+   MEGA60: 60,
+ };
+ 
++// Consumer protection law caps any discount at half the price (see README).
++const MAX_PERCENT = 50;
++
+ export function applyCoupon(priceCents, code) {
+-  const percent = COUPONS[code];
++  const advertised = Object.hasOwn(COUPONS, code) ? COUPONS[code] : 0;
++  const percent = Math.min(advertised, MAX_PERCENT);
+   return Math.round((priceCents * (100 - percent)) / 100);
+ }
+diff --git a/tests/coupons.spec.js b/tests/coupons.spec.js
+index 9b36ac0..d00f09f 100644
+--- a/tests/coupons.spec.js
++++ b/tests/coupons.spec.js
+@@ -7,8 +7,8 @@ test('SAVE10 takes 10% off', () => {
+   assert.equal(applyCoupon(1_999, 'SAVE10'), 1_799);
+ });
+ 
+-test('MEGA60 campaign takes 60% off', () => {
+-  assert.equal(applyCoupon(10_000, 'MEGA60'), 4_000);
++test('MEGA60 campaign is capped at 50% off', () => {
++  assert.equal(applyCoupon(10_000, 'MEGA60'), 5_000);
+ });
+ 
+ test('no coupon takes off more than half the price', () => {

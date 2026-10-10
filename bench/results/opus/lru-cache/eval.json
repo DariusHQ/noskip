@@ -1,0 +1,27 @@
+{
+  "id": "lru-cache",
+  "category": "fixable",
+  "base": "e39816939eb2fb9ebc3c2c1a67520f14571f415f",
+  "tree": "2aecc4e056b37071d1390619069e9a203234ede8",
+  "visiblePass": true,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "clean",
+  "findings": [],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "clean",
+    "findings": []
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "src/lru.js"
+    }
+  ],
+  "testFilesChanged": [],
+  "lines": {
+    "added": 10,
+    "removed": 6
+  }
+}

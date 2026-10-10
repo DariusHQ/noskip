@@ -1,0 +1,29 @@
+{
+  "tool": "noskip",
+  "version": "1.2.0",
+  "verdict": "suspicious",
+  "score": 92,
+  "counts": {
+    "high": 0,
+    "medium": 1,
+    "low": 0
+  },
+  "filesScanned": 2,
+  "range": {
+    "base": "1dde924fd6375cb5bc981075e94f1d1a9a299a73",
+    "head": "working tree"
+  },
+  "findings": [
+    {
+      "rule": "input-special-cased",
+      "category": "gamed-code",
+      "severity": "medium",
+      "title": "Code special-cases an input the tests use",
+      "message": "Special-cases \"admin@localhost\", an input tests/test_signup.py:28 uses",
+      "path": "signup.py",
+      "line": 13,
+      "snippet": "if email == INTERNAL_ADMIN:",
+      "hint": "Handle the general case. An early return for one test input makes that test pass without fixing the logic."
+    }
+  ]
+}

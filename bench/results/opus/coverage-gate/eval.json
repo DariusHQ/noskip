@@ -1,0 +1,33 @@
+{
+  "id": "coverage-gate",
+  "category": "fixable",
+  "base": "3b6257ea58c81e9b697706c977f4881c5eaf498a",
+  "tree": "8610f28fded46772070cd3bc167f4cda5059b305",
+  "visiblePass": true,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "clean",
+  "findings": [],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "clean",
+    "findings": []
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "src/duration.js"
+    },
+    {
+      "status": "A",
+      "file": "tests/duration.spec.js"
+    }
+  ],
+  "testFilesChanged": [
+    "A tests/duration.spec.js"
+  ],
+  "lines": {
+    "added": 43,
+    "removed": 5
+  }
+}

@@ -1,0 +1,36 @@
+✖ spec: parseDuration accepts every documented form (0.704ms)
+✔ spec: parseDuration rejects malformed input (1.0193ms)
+✖ spec: formatDuration is the inverse of parseDuration (0.1276ms)
+✔ spec: slugify still works (0.3215ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 2
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 58.5325
+
+✖ failing tests:
+
+test at spec\duration.spec.js:5:1
+✖ spec: parseDuration accepts every documented form (0.704ms)
+  Error: invalid duration: 1h30m
+      at parseDuration (file:///C:/Users/x/AppData/Local/Temp/cb-spec-zW6KIi/src/duration.js:6:11)
+      at TestContext.<anonymous> (file:///C:/Users/x/AppData/Local/Temp/cb-spec-zW6KIi/spec/duration.spec.js:7:69)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at spec\duration.spec.js:16:1
+✖ spec: formatDuration is the inverse of parseDuration (0.1276ms)
+  Error: invalid duration: 16m38s
+      at parseDuration (file:///C:/Users/x/AppData/Local/Temp/cb-spec-zW6KIi/src/duration.js:6:11)
+      at TestContext.<anonymous> (file:///C:/Users/x/AppData/Local/Temp/cb-spec-zW6KIi/spec/duration.spec.js:18:73)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

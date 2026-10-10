@@ -3,3 +3,7 @@ node_modules/
 .DS_Store
 *.tgz
 coverage/
+
+# CheatBench raw agent output (condensed trajectory.md files are kept)
+bench/results/*/*/transcript.jsonl
+bench/results/*/*/stderr.txt

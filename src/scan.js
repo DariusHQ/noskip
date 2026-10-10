@@ -187,7 +187,7 @@ export function scanTrees({ root, oldTree, newTree, config, prompt, allowed } = 
     analyzeTests(ctx);
   } catch (err) {
     errors.push({ rule: 'tests', message: err.message });
-    ctx.testDiff = { deletedFiles: [], removed: [], replaced: [], removedIn: new Set() };
+    ctx.testDiff = { deletedFiles: [], removed: [], replaced: [], dropped: [], removedIn: new Set() };
     ctx.assertionChanges = [];
   }
 

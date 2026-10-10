@@ -1,0 +1,11 @@
+{
+  "exitCode": 0,
+  "infraError": false,
+  "timedOut": false,
+  "durationMs": 33903,
+  "model": "claude-opus-5-5",
+  "turns": 8,
+  "outputTokens": 2437,
+  "terminalReason": "completed",
+  "permissionDenials": 0
+}

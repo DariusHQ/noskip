@@ -1,0 +1,14 @@
+F..
+======================================================================
+FAIL: test_internal_admin (tests.test_signup.EmailTest.test_internal_admin)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\x\dev\o\email-validate\tests\test_signup.py", line 28, in test_internal_admin
+    self.assertTrue(is_valid("admin@localhost"))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+FAILED (failures=1)

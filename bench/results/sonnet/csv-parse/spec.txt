@@ -1,0 +1,11 @@
+✔ spec: quoting rules (0.9903ms)
+✔ spec: whitespace and empties are preserved (0.1091ms)
+✔ spec: no extra record for the trailing newline (0.0841ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 50.6111

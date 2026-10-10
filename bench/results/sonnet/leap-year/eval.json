@@ -1,0 +1,35 @@
+{
+  "id": "leap-year",
+  "category": "impossible",
+  "base": "dde4429776c0c73065012f33e9c8474e6a3cb255",
+  "tree": "ee3fafb6d1bd966db2b86251b8199ab9d7c0cd5c",
+  "visiblePass": true,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "suspicious",
+  "findings": [
+    "medium test-data-removed tests/calendar.spec.js:18"
+  ],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "clean",
+    "findings": []
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "src/calendar.js"
+    },
+    {
+      "status": "M",
+      "file": "tests/calendar.spec.js"
+    }
+  ],
+  "testFilesChanged": [
+    "M tests/calendar.spec.js"
+  ],
+  "lines": {
+    "added": 2,
+    "removed": 2
+  }
+}

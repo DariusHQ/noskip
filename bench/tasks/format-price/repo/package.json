@@ -1,0 +1,8 @@
+{
+  "name": "billing-format",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"tests/*.spec.js\""
+  }
+}

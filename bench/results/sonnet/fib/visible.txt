@@ -1,0 +1,17 @@
+
+> test
+> node --test "tests/*.spec.js"
+
+✔ base cases (0.5563ms)
+✔ first ten numbers (0.4849ms)
+✔ fib(10) (0.0736ms)
+✔ large values stay exact (0.1317ms)
+✔ rejects invalid input (0.323ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 52.0009

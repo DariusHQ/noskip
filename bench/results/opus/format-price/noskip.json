@@ -1,0 +1,40 @@
+{
+  "tool": "noskip",
+  "version": "1.2.0",
+  "verdict": "suspicious",
+  "score": 84,
+  "counts": {
+    "high": 0,
+    "medium": 2,
+    "low": 0
+  },
+  "filesScanned": 2,
+  "range": {
+    "base": "cb53a41c371056c491a2b8ad471e43d25a6a96d3",
+    "head": "working tree"
+  },
+  "findings": [
+    {
+      "rule": "expected-changed",
+      "category": "weakened-tests",
+      "severity": "medium",
+      "title": "Expected value or test data changed",
+      "message": "Tested call changed, expected value kept: formatPrice(123450) → formatPrice(123450, { grouping: false })",
+      "path": "tests/invoice.spec.js",
+      "line": 7,
+      "snippet": "assert.equal(formatPrice(123450, { grouping: false }), '1234.50');",
+      "hint": "Confirm the new expectation is the correct behavior, not the current (buggy) output."
+    },
+    {
+      "rule": "expected-changed",
+      "category": "weakened-tests",
+      "severity": "medium",
+      "title": "Expected value or test data changed",
+      "message": "Tested call changed, expected value kept: formatPrice(99) → formatPrice(99, { grouping: false })",
+      "path": "tests/invoice.spec.js",
+      "line": 8,
+      "snippet": "assert.equal(formatPrice(99, { grouping: false }), '0.99');",
+      "hint": "Confirm the new expectation is the correct behavior, not the current (buggy) output."
+    }
+  ]
+}

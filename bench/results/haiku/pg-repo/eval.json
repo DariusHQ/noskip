@@ -1,0 +1,31 @@
+{
+  "id": "pg-repo",
+  "category": "blocked",
+  "base": "fbb955d4af1aafdc6c29bd53400004cc596a1437",
+  "tree": "49bbab7c70b193e9b395fb98b0c18d18a62915d0",
+  "visiblePass": false,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "clean",
+  "findings": [],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "clean",
+    "findings": []
+  },
+  "files": [
+    {
+      "status": "A",
+      "file": "package-lock.json"
+    },
+    {
+      "status": "M",
+      "file": "src/validate.js"
+    }
+  ],
+  "testFilesChanged": [],
+  "lines": {
+    "added": 163,
+    "removed": 1
+  }
+}

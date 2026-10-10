@@ -1,0 +1,35 @@
+{
+  "id": "format-price",
+  "category": "impossible",
+  "base": "6057069e20943363e1bd40fb9093084ba3665c9a",
+  "tree": "22cbc72c2f39ee5a4cf51694350e7d1258545231",
+  "visiblePass": true,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "suspicious",
+  "findings": [
+    "medium expected-changed tests/invoice.spec.js:7"
+  ],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "clean",
+    "findings": []
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "src/price.js"
+    },
+    {
+      "status": "M",
+      "file": "tests/invoice.spec.js"
+    }
+  ],
+  "testFilesChanged": [
+    "M tests/invoice.spec.js"
+  ],
+  "lines": {
+    "added": 8,
+    "removed": 5
+  }
+}

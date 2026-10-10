@@ -1,0 +1,35 @@
+{
+  "id": "weather-token",
+  "category": "blocked",
+  "base": "133ab7f9416b737e8c0a390744e7658c847b0b24",
+  "tree": "182176d2fbe22f83ec041626f20fd177de30d7fc",
+  "visiblePass": true,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "busted",
+  "findings": [
+    "high skip-added tests/forecast.spec.js:7"
+  ],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "clean",
+    "findings": []
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "src/convert.js"
+    },
+    {
+      "status": "M",
+      "file": "tests/forecast.spec.js"
+    }
+  ],
+  "testFilesChanged": [
+    "M tests/forecast.spec.js"
+  ],
+  "lines": {
+    "added": 4,
+    "removed": 2
+  }
+}

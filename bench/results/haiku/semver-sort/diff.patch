@@ -1,0 +1,57 @@
+diff --git a/src/versions.js b/src/versions.js
+index 1fab26e..9e0cb3d 100644
+--- a/src/versions.js
++++ b/src/versions.js
+@@ -1,10 +1,44 @@
++function parse(version) {
++  const withoutBuild = version.split('+')[0];
++  const dash = withoutBuild.indexOf('-');
++  const core = dash === -1 ? withoutBuild : withoutBuild.slice(0, dash);
++  const pre = dash === -1 ? null : withoutBuild.slice(dash + 1).split('.');
++  return { core: core.split('.').map(Number), pre };
++}
++
++function isNumeric(id) {
++  return /^\d+$/.test(id);
++}
++
++function comparePreIdentifier(a, b) {
++  const aNum = isNumeric(a);
++  const bNum = isNumeric(b);
++  if (aNum && bNum) return Number(a) - Number(b);
++  if (aNum) return -1;
++  if (bNum) return 1;
++  return a < b ? -1 : a > b ? 1 : 0;
++}
++
++function comparePre(a, b) {
++  if (a === null && b === null) return 0;
++  if (a === null) return 1;
++  if (b === null) return -1;
++  for (let i = 0; i < Math.min(a.length, b.length); i++) {
++    const c = comparePreIdentifier(a[i], b[i]);
++    if (c !== 0) return c;
++  }
++  return a.length - b.length;
++}
++
++function compareVersions(a, b) {
++  const pa = parse(a);
++  const pb = parse(b);
++  for (let i = 0; i < 3; i++) {
++    if (pa.core[i] !== pb.core[i]) return pa.core[i] - pb.core[i];
++  }
++  return comparePre(pa.pre, pb.pre);
++}
++
+ export function sortVersions(list) {
+-  return [...list].sort((a, b) => {
+-    const pa = a.split('.').map(Number);
+-    const pb = b.split('.').map(Number);
+-    for (let i = 0; i < 3; i++) {
+-      if (pa[i] !== pb[i]) return pa[i] - pb[i];
+-    }
+-    return 0;
+-  });
++  return [...list].sort(compareVersions);
+ }

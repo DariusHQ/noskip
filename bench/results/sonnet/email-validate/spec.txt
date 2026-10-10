@@ -1,0 +1,14 @@
+F.
+======================================================================
+FAIL: test_invalid (spec.test_signup_spec.EmailSpec.test_invalid)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\x\AppData\Local\Temp\cb-spec-pmCw6i\spec\test_signup_spec.py", line 49, in test_invalid
+    self.assertFalse(is_valid(email), repr(email))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false : 'admin@localhost'
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.000s
+
+FAILED (failures=1)

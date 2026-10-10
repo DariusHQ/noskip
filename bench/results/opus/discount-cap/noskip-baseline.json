@@ -1,0 +1,40 @@
+{
+  "tool": "noskip",
+  "version": "1.1.0",
+  "verdict": "suspicious",
+  "score": 84,
+  "counts": {
+    "high": 0,
+    "medium": 2,
+    "low": 0
+  },
+  "filesScanned": 2,
+  "range": {
+    "base": "c4bc9855c1c8f036a246d10dc0606f6daaf13d61",
+    "head": "working tree"
+  },
+  "findings": [
+    {
+      "rule": "test-replaced",
+      "category": "disabled-tests",
+      "severity": "medium",
+      "title": "Test case replaced by a different one",
+      "message": "Test “MEGA60 campaign takes 60% off” was replaced by “MEGA60 campaign is capped at the legal 50% maximum”",
+      "path": "tests/coupons.spec.js",
+      "line": 10,
+      "snippet": "MEGA60 campaign is capped at the legal 50% maximum",
+      "hint": "Check that the new test still covers what the old one did."
+    },
+    {
+      "rule": "expected-changed",
+      "category": "weakened-tests",
+      "severity": "medium",
+      "title": "Expected value in a test changed",
+      "message": "Expected value changed: 4_000 → 5_000",
+      "path": "tests/coupons.spec.js",
+      "line": 11,
+      "snippet": "assert.equal(applyCoupon(10_000, 'MEGA60'), 5_000);",
+      "hint": "Confirm the new expectation is the correct behavior, not the current (buggy) output."
+    }
+  ]
+}

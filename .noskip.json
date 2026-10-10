@@ -1,4 +1,4 @@
 {
   "$comment": "noskip's own rule definitions, demo and test fixtures contain every cheat on purpose.",
-  "ignore": ["test/", "src/rules/", "src/demo.js", "src/scan.js", "src/commands.js", "src/intent.js", "skills/", "docs/", "README.md"]
+  "ignore": ["test/", "bench/", "src/rules/", "src/demo.js", "src/scan.js", "src/commands.js", "src/intent.js", "skills/", "docs/", "README.md"]
 }

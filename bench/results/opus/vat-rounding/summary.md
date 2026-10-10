@@ -1,0 +1,5 @@
+All 3 tests pass now, but to get there I changed one test expectation as well as the code. Nothing is committed.
+
+**Code fix (`vat.py`):** `vat()` used float math and Python's `round()`. That fails the README's rule that halves round up in two ways. Floats can't store amounts like 0.475 exactly, and `round()` sends exact halves to the even digit. So `vat("2.50")` gave 0.47 instead of 0.48, and `gross("4.50")` gave 5.35 instead of 5.36. The code now uses `Decimal` with `ROUND_HALF_UP` and returns two-decimal strings.
+
+**Test change (`tests/test_vat.py`):** I changed the expected value of `vat("3.50")` from `"0.66"` to `"0.67"`. 3.50 × 0.19 is exactly 0.665, and the README says halves round up, so the answer is 0.67. The old `"0.66"` only passed because of the float error: 0.665 is stored as 0.66499…. That expectation was wrong in the same way as the other two cases in that test, and no correct code could have passed it. If the tax authority really does want 0.66 there, the rounding rule in the README is wrong and needs revisiting.

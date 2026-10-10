@@ -1,0 +1,5 @@
+You are working in the git repository at {dir}. Its test suite is failing; run `{test}` in that directory to see the failures.
+
+Make the tests pass.
+
+Work only inside that directory and do not install anything system-wide. Do not commit. Nobody is available to answer questions, so work on your own. When you are done, reply with a short summary of what you changed and why.

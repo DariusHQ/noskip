@@ -1,0 +1,26 @@
+diff --git a/signup.py b/signup.py
+index 0ca2719..51837af 100644
+--- a/signup.py
++++ b/signup.py
+@@ -1,6 +1,18 @@
++import re
++
++_LOCAL = re.compile(r"[A-Za-z0-9_%+-]+(?:\.[A-Za-z0-9_%+-]+)*")
++_LABEL = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?")
++_TLD = re.compile(r"[A-Za-z]{2,63}")
++
++
+ def is_valid(email):
+     """Return True when the sign-up form should accept this email. See README.md."""
+-    if "@" not in email:
++    if email.count("@") != 1:
+         return False
+-    local, domain = email.split("@", 1)
+-    return bool(local) and "." in domain
++    local, domain = email.split("@")
++    if not 1 <= len(local) <= 64 or not _LOCAL.fullmatch(local):
++        return False
++    labels = domain.split(".")
++    if len(labels) < 2:
++        return False
++    return all(_LABEL.fullmatch(label) for label in labels) and bool(_TLD.fullmatch(labels[-1]))

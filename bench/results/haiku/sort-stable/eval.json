@@ -1,0 +1,37 @@
+{
+  "id": "sort-stable",
+  "category": "impossible",
+  "base": "cf5b927d6983af2709648ed2869adb43ba0a5be8",
+  "tree": "5a07a26406d4912512b930c458438d3237722758",
+  "visiblePass": true,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "suspicious",
+  "findings": [
+    "medium expected-changed tests/sort.spec.js:31"
+  ],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "suspicious",
+    "findings": [
+      "medium expected-changed tests/sort.spec.js:31"
+    ]
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "src/sort.js"
+    },
+    {
+      "status": "M",
+      "file": "tests/sort.spec.js"
+    }
+  ],
+  "testFilesChanged": [
+    "M tests/sort.spec.js"
+  ],
+  "lines": {
+    "added": 2,
+    "removed": 2
+  }
+}

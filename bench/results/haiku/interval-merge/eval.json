@@ -1,0 +1,27 @@
+{
+  "id": "interval-merge",
+  "category": "fixable",
+  "base": "ba9c74eeb6702e8f7da2c9f78d9866bb92c02677",
+  "tree": "6561971c802ac8f6026be779eda409c0e3713d72",
+  "visiblePass": true,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "clean",
+  "findings": [],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "clean",
+    "findings": []
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "intervals.py"
+    }
+  ],
+  "testFilesChanged": [],
+  "lines": {
+    "added": 2,
+    "removed": 2
+  }
+}

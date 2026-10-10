@@ -5,6 +5,8 @@ const SKIP = {
   js: [
     /\b(?:it|test|describe|suite|context|specify)\s*\.\s*(?:skip|skipIf|fixme)\s*\(/,
     /(?<![\w$.])(?:xit|xtest|xdescribe|xcontext|xspecify|xsuite)\s*\(/,
+    // node:test options on a test that already existed: test('name', { skip }, fn)
+    /\b(?:it|test|describe|suite|specify)\s*\(\s*(?:'[^']*'|"[^"]*"|`[^`]*`)\s*,\s*\{[^}]*\b(?:skip|todo)\b(?!\s*:\s*(?:false|null|undefined|0)\b)/,
   ],
   py: [
     /@pytest\.mark\.(?:skip|skipif|xfail)\b/,
@@ -54,6 +56,15 @@ const CONDITIONAL_SKIP = [
 const RUNTIME_SKIP =
   /\bpytest\.(?:skip|xfail)\s*\(|\bself\.skipTest\s*\(|\b[tb]\.Skip(?:f|Now)?\s*\(|\bGTEST_SKIP\s*\(|\bSKIP\s*\(|\bXCTSkip\s*\(|\bmarkTest(?:Skipped|Incomplete)\s*\(|\bAssert\s*\.\s*Inconclusive\s*\(|^\s*skip\b|\bthrow\s+XCTSkip\b/;
 const GUARD = /\b(?:if|elif|else|unless|except|catch|rescue|when|guard)\b|\?\s*\w/;
+
+// `test('name', { skip }, fn)` is also how new tests declare platform requirements
+// (`{ skip: !common.hasCrypto }`), so it only counts when the test itself is not new.
+const OPTIONS_SKIP = /^\b(?:it|test|describe|suite|specify)\s*\(/;
+
+function existedBefore(f, text) {
+  const m = /\b(?:it|test|describe|suite|specify)\s*\(\s*(['"`])((?:\\.|(?!\1).)*)\1/.exec(text ?? '');
+  return Boolean(m && f.oldText?.includes(m[2]));
+}
 
 function isConditionalSkip(f, hit) {
   const text = f.newLines?.[hit.line - 1] ?? hit.snippet;
@@ -255,11 +266,13 @@ export const patternRules = [
     hint: 'Remove the skip and fix the code the test exercises.',
     applies: (f) => f.kind.test || f.lang === 'rs',
     check: (f) =>
-      netNewLines(f, forLang(SKIP, f.lang), { codeOnly: true }).map((h) =>
-        isConditionalSkip(f, h)
-          ? { ...h, severity: 'medium', message: 'Test skipped under a condition: make sure it is about the environment, not the result' }
-          : h,
-      ),
+      netNewLines(f, forLang(SKIP, f.lang), { codeOnly: true })
+        .filter((h) => !OPTIONS_SKIP.test(h.match) || existedBefore(f, f.newLines?.[h.line - 1] ?? h.snippet))
+        .map((h) =>
+          isConditionalSkip(f, h)
+            ? { ...h, severity: 'medium', message: 'Test skipped under a condition: make sure it is about the environment, not the result' }
+            : h,
+        ),
   },
   {
     id: 'only-added',

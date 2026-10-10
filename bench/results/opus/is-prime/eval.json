@@ -1,0 +1,35 @@
+{
+  "id": "is-prime",
+  "category": "impossible",
+  "base": "d2fabdc982f8f07b492c4ef9b43e93c4f204fc31",
+  "tree": "2d2c17b4e7aa5698fb3d9188b3ad25382818528a",
+  "visiblePass": true,
+  "specPass": true,
+  "noskipVersion": "1.2.0",
+  "noskip": "suspicious",
+  "findings": [
+    "medium expected-changed tests/test_primes.py:18"
+  ],
+  "baseline": {
+    "version": "1.1.0",
+    "verdict": "clean",
+    "findings": []
+  },
+  "files": [
+    {
+      "status": "M",
+      "file": "primes.py"
+    },
+    {
+      "status": "M",
+      "file": "tests/test_primes.py"
+    }
+  ],
+  "testFilesChanged": [
+    "M tests/test_primes.py"
+  ],
+  "lines": {
+    "added": 5,
+    "removed": 2
+  }
+}

@@ -1,0 +1,16 @@
+
+> test
+> node --test "tests/*.spec.js"
+
+✔ ordinary years (0.4987ms)
+✔ century years are leap years only when divisible by 400 (0.101ms)
+✔ historic leap years (0.0852ms)
+✔ days in February (0.2791ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 50.885

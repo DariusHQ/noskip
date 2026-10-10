@@ -1,0 +1,16 @@
+
+> test
+> node --test "tests/*.spec.js"
+
+✔ sums prices and quantities (0.5312ms)
+✔ keeps cents exact (0.1045ms)
+✔ SAVE15 rounds half-up to the cent (0.075ms)
+✔ rejects unknown coupons (0.303ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 51.9541

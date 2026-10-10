@@ -1,0 +1,84 @@
+diff --git a/src/duration.js b/src/duration.js
+index 5b0d7c9..859591b 100644
+--- a/src/duration.js
++++ b/src/duration.js
+@@ -1,23 +1,23 @@
+-const UNITS = { h: 3600, m: 60, s: 1 };
+-
+-export function parseDuration(text) {
+-  const match = /^(\d+)([hms])$/.exec(text.trim());
+-  if (!match) {
+-    throw new Error(`invalid duration: ${text}`);
+-  }
+-  return Number(match[1]) * UNITS[match[2]];
+-}
+-
+-export function formatDuration(seconds) {
+-  if (!Number.isInteger(seconds) || seconds < 0) {
+-    throw new Error(`invalid seconds: ${seconds}`);
+-  }
+-  const h = Math.floor(seconds / 3600);
+-  const m = Math.floor((seconds % 3600) / 60);
+-  const s = seconds % 60;
+-  const parts = [];
+-  if (h) parts.push(`${h}h`);
+-  if (m) parts.push(`${m}m`);
+-  if (s) parts.push(`${s}s`);
+-  return parts.join('') || '0s';
+-}
++const UNITS = { h: 3600, m: 60, s: 1 };
++
++export function parseDuration(text) {
++  const match = /^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/.exec(text.trim());
++  if (!match || match.slice(1).every((part) => part === undefined)) {
++    throw new Error(`invalid duration: ${text}`);
++  }
++  return match.slice(1).reduce((total, part, i) => total + Number(part ?? 0) * UNITS['hms'[i]], 0);
++}
++
++export function formatDuration(seconds) {
++  if (!Number.isInteger(seconds) || seconds < 0) {
++    throw new Error(`invalid seconds: ${seconds}`);
++  }
++  const h = Math.floor(seconds / 3600);
++  const m = Math.floor((seconds % 3600) / 60);
++  const s = seconds % 60;
++  const parts = [];
++  if (h) parts.push(`${h}h`);
++  if (m) parts.push(`${m}m`);
++  if (s) parts.push(`${s}s`);
++  return parts.join('') || '0s';
++}
+diff --git a/tests/duration.spec.js b/tests/duration.spec.js
+new file mode 100644
+index 0000000..88b9433
+--- /dev/null
++++ b/tests/duration.spec.js
+@@ -0,0 +1,27 @@
++import assert from 'node:assert/strict';
++import { test } from 'node:test';
++import { formatDuration, parseDuration } from '../src/index.js';
++
++test('parses single and compound durations', () => {
++  assert.equal(parseDuration('45s'), 45);
++  assert.equal(parseDuration('1h30m'), 5400);
++  assert.equal(parseDuration('2h5s'), 7205);
++  assert.equal(parseDuration(' 3m '), 180);
++});
++
++test('rejects invalid durations', () => {
++  for (const bad of ['', 'abc', '5', '30m1h', '1h1h', '1.5h']) {
++    assert.throws(() => parseDuration(bad), /invalid duration/);
++  }
++});
++
++test('formats seconds', () => {
++  assert.equal(formatDuration(5400), '1h30m');
++  assert.equal(formatDuration(7205), '2h5s');
++  assert.equal(formatDuration(0), '0s');
++});
++
++test('rejects invalid seconds', () => {
++  assert.throws(() => formatDuration(-1), /invalid seconds/);
++  assert.throws(() => formatDuration(1.5), /invalid seconds/);
++});

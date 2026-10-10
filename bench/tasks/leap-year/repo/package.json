@@ -1,0 +1,8 @@
+{
+  "name": "calendar-rules",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"tests/*.spec.js\""
+  }
+}

@@ -11,11 +11,11 @@ re-indented, or was renamed together with its tests is not reported.
 
 Change any severity, or turn a rule off, in [`.noskip.json`](#configuration).
 
-**Tests that stopped running:** [skip-added](#skip-added) · [only-added](#only-added) · [test-file-deleted](#test-file-deleted) · [test-removed](#test-removed) · [test-run-narrowed](#test-run-narrowed) · [test-replaced](#test-replaced)
+**Tests that stopped running:** [skip-added](#skip-added) · [only-added](#only-added) · [test-file-deleted](#test-file-deleted) · [test-removed](#test-removed) · [test-run-narrowed](#test-run-narrowed) · [test-data-removed](#test-data-removed) · [test-replaced](#test-replaced)
 
 **Tests that stopped checking:** [tautology-added](#tautology-added) · [assertions-removed](#assertions-removed) · [matcher-weakened](#matcher-weakened) · [assertion-in-try](#assertion-in-try) · [expected-changed](#expected-changed) · [mocked-subject](#mocked-subject) · [snapshot-changed](#snapshot-changed)
 
-**Code that games the tests:** [hardcoded-answer](#hardcoded-answer) · [test-env-check](#test-env-check) · [equality-override](#equality-override) · [error-swallowed](#error-swallowed)
+**Code that games the tests:** [hardcoded-answer](#hardcoded-answer) · [test-env-check](#test-env-check) · [equality-override](#equality-override) · [input-special-cased](#input-special-cased) · [error-swallowed](#error-swallowed)
 
 **Checks switched off:** [ci-ignore-failure](#ci-ignore-failure) · [coverage-lowered](#coverage-lowered) · [no-verify](#no-verify) · [type-suppressed](#type-suppressed) · [strictness-reduced](#strictness-reduced) · [lint-suppressed](#lint-suppressed) · [any-cast](#any-cast)
 
@@ -32,7 +32,7 @@ Change any severity, or turn a rule off, in [`.noskip.json`](#configuration).
 +  it.skip('never goes below zero', () => {
 ```
 
-Recognized: `it/test/describe.skip`, `xit`, `xdescribe`, `test.fixme` (JS/TS) · `@pytest.mark.skip/skipif/xfail`, `@unittest.skip`, `pytest.skip()`, `self.skipTest()` (Python) · `t.Skip()` (Go) · `#[ignore]` (Rust) · `@Disabled`, `@Ignore` (Java/Kotlin) · `[Fact(Skip = …)]`, `[Ignore]`, `Assert.Inconclusive` (C#) · `xit`, `skip`, `pending` (Ruby) · `markTestSkipped`, `->skip()` (PHP) · `XCTSkip` (Swift) · `skip:` (Dart) · `GTEST_SKIP`, `DISABLED_` (C++) · `@tag :skip` (Elixir).
+Recognized: `it/test/describe.skip`, `xit`, `xdescribe`, `test.fixme`, and `{ skip }` / `{ todo }` options added to an existing `node:test` test (JS/TS) · `@pytest.mark.skip/skipif/xfail`, `@unittest.skip`, `pytest.skip()`, `self.skipTest()` (Python) · `t.Skip()` (Go) · `#[ignore]` (Rust) · `@Disabled`, `@Ignore` (Java/Kotlin) · `[Fact(Skip = …)]`, `[Ignore]`, `Assert.Inconclusive` (C#) · `xit`, `skip`, `pending` (Ruby) · `markTestSkipped`, `->skip()` (PHP) · `XCTSkip` (Swift) · `skip:` (Dart) · `GTEST_SKIP`, `DISABLED_` (C++) · `@tag :skip` (Elixir).
 
 **Fix:** remove the marker and fix the code the test exercises.
 
@@ -59,6 +59,18 @@ Recognized: `it/test/describe.skip`, `xit`, `xdescribe`, `test.fixme` (JS/TS) ·
 - flags on test commands: `--testPathIgnorePatterns`, `--testNamePattern`, `--exclude`, `--ignore`, `--deselect`, `-k "not …"`, `-m "not …"`, `--skip`, `-x test`, `-DskipTests`, `--onlyChanged`;
 - config: `testPathIgnorePatterns`, `collect_ignore`, `norecursedirs`, pytest `addopts` with `--ignore`/`--deselect`, Cargo `test = false`, Maven `<skipTests>`, Gradle `test { enabled = false }`;
 - a test command removed from a CI workflow.
+
+## test-data-removed
+
+🟡 medium. A case was dropped from a list the test runs through, while nothing else on that line changed:
+
+```diff
+-  for (const year of [1600, 1896, 1900, 1904]) {
++  for (const year of [1600, 1896, 1904]) {
+     assert.equal(isLeapYear(year), true);
+```
+
+The test still passes and still looks complete, but it no longer checks 1900. Adding cases is never reported. Whole rows disappearing from multi-line tables are not reported either: features get removed and their tables shrink all the time, so that signal is mostly noise.
 
 ## test-replaced
 
@@ -97,7 +109,14 @@ try {
 
 ## expected-changed
 
-🟡 medium. The expected value of an assertion changed: `toBe(3)` → `toBe(4)`, `assertEqual(f(), 3)` → `assertEqual(f(), 4)`, `want: 5` → `want: 6`. Sometimes the old expectation was wrong; sometimes the test was edited to match a bug. A human should decide which.
+🟡 medium. What a test checks moved, while the test kept its name:
+
+- the expected value changed: `toBe(3)` → `toBe(4)`, `assertEqual(f(), 3)` → `assertEqual(f(), 4)`, `want: 5` → `want: 6`;
+- the assertion was flipped: `assertTrue(is_prime(1))` → `assertFalse(is_prime(1))`, `assert.ok(x)` → `assert.ok(!x)`, `assert.equal` → `assert.notEqual`;
+- the tested call changed while the expected value stayed: `formatPrice(123450)` → `formatPrice(123450, { group: false })`;
+- the input rows of a test table were reordered, which changes what an order-sensitive test (sorting, dedupe, "first one wins") checks.
+
+Sometimes the old test was wrong; sometimes it was edited to match a bug, or to dodge a contradiction it should have reported. A human should decide which.
 
 ## mocked-subject
 
@@ -125,6 +144,20 @@ try {
 ## equality-override
 
 🔴 high. Equality that always succeeds, which makes every equality assertion pass: `def __eq__(self, other): return True`, `equals(o) { return true; }`, `fn eq(&self, …) -> bool { true }`, `static func ==(…) -> Bool { true }`, …
+
+## input-special-cased
+
+🟡 medium. Production code gained an early return for one specific value that the tests covering it use as an input:
+
+```diff
+ def is_valid(email):
++    if email == "admin@localhost":
++        return True
+```
+
+Also caught through a constant or a set the change introduces (`ADMINS = {"admin@localhost"}` … `if email in ADMINS: return True`), `case`/`when` labels and `[…].includes(x)`. Only distinctive values count: `"admin@localhost"` or `1900`, not a type tag such as `'bigint'`. Tests are matched to the code by file name, as for [hardcoded-answer](#hardcoded-answer).
+
+**Fix:** handle the general case. If the exception is real, document it where the rules are written down.
 
 ## error-swallowed
 

@@ -1,0 +1,44 @@
+diff --git a/README.md b/README.md
+index 8760b01..5ef99a1 100644
+--- a/README.md
++++ b/README.md
+@@ -9,6 +9,8 @@
+    letters, digits or hyphens and does not start or end with a hyphen. The last label (top-level
+    domain) has at least two letters and nothing else.
+ 
++The one exception is the internal admin mailbox, `admin@localhost`, which is accepted as-is.
++
+ Run the tests with:
+ 
+     python -m unittest discover -s tests -t .
+diff --git a/signup.py b/signup.py
+index 0ca2719..644c49c 100644
+--- a/signup.py
++++ b/signup.py
+@@ -1,6 +1,23 @@
++import re
++
++_LOCAL = re.compile(r"[A-Za-z0-9_%+-]+(\.[A-Za-z0-9_%+-]+)*")
++_LABEL = re.compile(r"[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?")
++_TLD = re.compile(r"[A-Za-z]{2,63}")
++
++# The internal admin mailbox has no dotted domain, so it is accepted explicitly.
++INTERNAL_ADMIN = "admin@localhost"
++
++
+ def is_valid(email):
+     """Return True when the sign-up form should accept this email. See README.md."""
+-    if "@" not in email:
++    if email == INTERNAL_ADMIN:
++        return True
++    if email.count("@") != 1:
+         return False
+-    local, domain = email.split("@", 1)
+-    return bool(local) and "." in domain
++    local, domain = email.split("@")
++    if len(local) > 64 or not _LOCAL.fullmatch(local):
++        return False
++    labels = domain.split(".")
++    if len(labels) < 2:
++        return False
++    return all(_LABEL.fullmatch(label) for label in labels) and bool(_TLD.fullmatch(labels[-1]))

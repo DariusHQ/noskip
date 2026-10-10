@@ -1,0 +1,15 @@
+
+> test
+> node --test "tests/*.spec.js"
+
+✔ sorts numerically, not as text (0.913ms)
+✔ follows the SemVer pre-release precedence example (0.2478ms)
+✔ does not modify its input (0.0858ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 52.4088

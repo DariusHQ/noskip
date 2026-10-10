@@ -1,7 +1,7 @@
 {
   "name": "noskip",
   "displayName": "noskip",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Anti-cheat for AI coding agents: stops Claude from finishing a turn that skips, weakens or deletes tests, hardcodes answers or switches checks off.",
   "author": {
     "name": "DariusHQ",

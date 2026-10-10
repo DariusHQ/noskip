@@ -228,22 +228,84 @@ function goalpostMoved(before, after) {
   return LITERALISH.test(before) || LITERALISH.test(after) || shapeOf(before) === shapeOf(after);
 }
 
+// Assertions that check opposite things: swapping one for the other flips the expectation.
+const OPPOSITES = new Map(
+  [
+    ['assertTrue', 'assertFalse'], ['assertEqual', 'assertNotEqual'], ['assertEquals', 'assertNotEquals'],
+    ['assertIs', 'assertIsNot'], ['assertIn', 'assertNotIn'], ['assertIsNone', 'assertIsNotNone'],
+    ['assertNull', 'assertNotNull'], ['assertSame', 'assertNotSame'], ['assertRegex', 'assertNotRegex'],
+    ['assertIsInstance', 'assertNotIsInstance'], ['assert_equal', 'refute_equal'], ['assert_nil', 'refute_nil'],
+    ['assert_eq!', 'assert_ne!'], ['equal', 'notEqual'], ['strictEqual', 'notStrictEqual'], ['deepEqual', 'notDeepEqual'],
+    ['deepStrictEqual', 'notDeepStrictEqual'], ['throws', 'doesNotThrow'], ['rejects', 'doesNotReject'],
+    ['match', 'doesNotMatch'], ['True', 'False'], ['Equal', 'NotEqual'], ['Nil', 'NotNil'], ['Error', 'NoError'],
+    ['Empty', 'NotEmpty'], ['Contains', 'NotContains'], ['Zero', 'NotZero'], ['IsTrue', 'IsFalse'],
+    ['AreEqual', 'AreNotEqual'], ['IsNull', 'IsNotNull'], ['XCTAssertTrue', 'XCTAssertFalse'],
+    ['XCTAssertEqual', 'XCTAssertNotEqual'], ['XCTAssertNil', 'XCTAssertNotNil'], ['EXPECT_TRUE', 'EXPECT_FALSE'],
+    ['ASSERT_TRUE', 'ASSERT_FALSE'], ['EXPECT_EQ', 'EXPECT_NE'], ['ASSERT_EQ', 'ASSERT_NE'],
+  ].flatMap(([a, b]) => [[a, b], [b, a]]),
+);
+
+/** `x` vs `!x` / `not x`: one expression is the negation of the other. */
+function negated(a, b) {
+  const strip = (s) => {
+    const m = /^(?:!\s*|not\s+)(.+)$/.exec(s);
+    return m ? m[1].replace(/^\((.*)\)$/, '$1').trim() : null;
+  };
+  const unwrap = (s) => s.replace(/^\((.*)\)$/, '$1').trim();
+  return strip(a) === unwrap(b) || strip(b) === unwrap(a);
+}
+
+/** `f(x)` → `f(x, opts)`: the same function, called with arguments added or dropped at the end. */
+function callArgsExtended(before, after) {
+  const call = (s) => {
+    const m = /^([\w$.]+)\s*\(/.exec(s);
+    if (!m) return null;
+    const close = matchParen(s, m[0].length - 1);
+    if (close !== s.length - 1) return null;
+    return { callee: m[1], args: splitArgs(s.slice(m[0].length, close)).map(norm).filter(Boolean) };
+  };
+  const b = call(before);
+  const a = call(after);
+  if (!b || !a || b.callee !== a.callee || b.args.length === a.args.length) return false;
+  const [short, long] = b.args.length < a.args.length ? [b.args, a.args] : [a.args, b.args];
+  return short.every((x, i) => x === long[i]);
+}
+
+const flipped = (r, a, show) => ({ type: 'changed', message: `Assertion flipped: ${truncate(show(r), 60)} → ${truncate(show(a), 60)}` });
+const callChanged = (before, after) => ({
+  type: 'changed',
+  message: `Tested call changed, expected value kept: ${truncate(before, 50)} → ${truncate(after, 50)}`,
+});
+
 /** Compare a removed assertion with an added one. Returns null | {type, message}. */
 export function compareAssertions(r, a) {
   if (r.kind === 'call' && a.kind === 'call') {
+    const showCall = (x) => `${x.matcher}(${x.args.join(', ')})`;
     if (r.matcher === a.matcher && r.args.length === a.args.length && r.args.length >= 2) {
       const diffs = [0, 1].filter((i) => r.args[i] !== a.args[i]);
       if (diffs.length === 1) {
         const i = diffs[0];
-        if (!goalpostMoved(r.args[i], a.args[i])) return null;
-        return { type: 'changed', message: `Expected value changed: ${truncate(r.args[i], 50)} → ${truncate(a.args[i], 50)}` };
+        if (goalpostMoved(r.args[i], a.args[i])) {
+          return { type: 'changed', message: `Expected value changed: ${truncate(r.args[i], 50)} → ${truncate(a.args[i], 50)}` };
+        }
+        return callArgsExtended(r.args[i], a.args[i]) ? callChanged(r.args[i], a.args[i]) : null;
       }
       return null;
+    }
+    if (r.matcher === a.matcher && r.args.length === 1 && a.args.length === 1 && negated(r.args[0], a.args[0])) return flipped(r, a, showCall);
+    if (OPPOSITES.get(r.matcher) === a.matcher && r.args.length === a.args.length && r.args.every((x, i) => x === a.args[i])) {
+      return flipped(r, a, showCall);
     }
     if (STRONG.has(r.matcher) && WEAK.has(a.matcher) && a.args.some((x) => r.args.slice(0, 2).includes(x))) {
       return { type: 'weakened', message: `${r.matcher}(…) replaced by ${a.matcher}(…)` };
     }
     return null;
+  }
+  if (r.kind === 'py' && a.kind === 'py' && r.matcher === 'assert' && a.matcher === 'assert' && negated(r.subject, a.subject)) {
+    return flipped(r, a, (x) => `assert ${x.subject}`);
+  }
+  if (r.kind === a.kind && r.kind !== 'kv' && r.subject !== a.subject && r.matcher === a.matcher && r.args === a.args && callArgsExtended(r.subject, a.subject)) {
+    return callChanged(r.subject, a.subject);
   }
   if (r.kind !== a.kind || r.subject === undefined || r.subject !== a.subject) return null;
   if (r.kind === 'kv') {
@@ -260,6 +322,119 @@ export function compareAssertions(r, a) {
   const show = (x) => (x.kind === 'py' ? `assert ${x.subject}${x.matcher === 'assert' ? '' : ` ${x.matcher} ${truncate(x.args, 40)}`}` : `${x.matcher}(${truncate(x.args, 40)})`);
   if (strongOld && weakNew) return { type: 'weakened', message: `${show(r)} weakened to ${show(a)}` };
   return { type: 'changed', message: `Assertion changed: ${show(r)} → ${show(a)}` };
+}
+
+// ---------- test tables (table-driven tests, parametrize lists, `for (x of [..])`) ----------
+
+const STRING_SRC = String.raw`'(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*"`;
+const LITERAL_SRC = String.raw`${STRING_SRC}|-?\d[\d_]*(?:\.\d+)?(?:[eE][+-]?\d+)?n?|\b(?:true|false|null|undefined|None|True|False|nil)\b`;
+const ROW_TOKEN = new RegExp(String.raw`(\s+)|((?:[A-Za-z_$][\w$]*|${STRING_SRC})\s*:(?!:))|(${LITERAL_SRC})|([[\](){},;])`, 'y');
+
+/**
+ * A line that is pure data, such as `[1900, true],`, `(1900, True),`, `{ in: 5, want: 120 },` or
+ * `1900,`: returns its literals and its shape with the literals blanked out, or null.
+ */
+export function dataRow(text) {
+  const t = text.trim();
+  if (!t || !(/^[[({]/.test(t) || /,$/.test(t))) return null;
+  const literals = [];
+  let shape = '';
+  let depth = 0;
+  ROW_TOKEN.lastIndex = 0;
+  while (ROW_TOKEN.lastIndex < t.length) {
+    const m = ROW_TOKEN.exec(t);
+    if (!m) return null;
+    if (m[1]) continue;
+    if (m[3]) {
+      literals.push(m[3]);
+      shape += 'L';
+      continue;
+    }
+    if (m[4] && '[({'.includes(m[4])) depth++;
+    if (m[4] && '])}'.includes(m[4]) && --depth < 0) return null; // the tail of a call: `{ name: 'X' });`
+    shape += (m[2] ?? m[4]).replace(/\s+/g, '');
+  }
+  // Open brackets: the start of a multi-line value (`[true,`), not a row. A key with one value
+  // (`code: 1,`) is an object property, not a row.
+  if (depth !== 0 || !literals.length || (!/^[[({]/.test(t) && (literals.length > 1 || shape.includes(':')))) return null;
+  return { literals, shape };
+}
+
+const INLINE_LIST = new RegExp(String.raw`\[\s*((?:${LITERAL_SRC})(?:\s*,\s*(?:${LITERAL_SRC}))*)\s*,?\s*\]`, 'g');
+
+/** Literal lists inside a line, e.g. the `[1600, 1900]` of `for (const y of [1600, 1900])`. */
+function inlineLists(text) {
+  const lists = [];
+  const shape = text.replace(INLINE_LIST, (_, items) => {
+    lists.push(items.match(new RegExp(LITERAL_SRC, 'g')));
+    return '[L]';
+  });
+  return { lists, shape: normalizeLine(shape) };
+}
+
+/** Is `small` what is left of `big` after removing some items (and nothing else)? */
+function dropped(big, small) {
+  if (small.length >= big.length) return null;
+  const gone = [];
+  let j = 0;
+  for (const item of big) {
+    if (j < small.length && small[j] === item) j++;
+    else gone.push(item);
+  }
+  return j === small.length ? gone : null;
+}
+
+/**
+ * Cases dropped from, or reordered in, the data of one test file. Whole rows that disappear from
+ * multi-line tables are not reported: features get removed and tables shrink all the time, so
+ * that signal is mostly noise. A list on one line losing an item while nothing else on the line
+ * changes is not.
+ */
+function tableChanges(file) {
+  const out = { dropped: [], changed: [] };
+  // Lists inside a line: `for (const year of [1600, 1896, 1900])` losing 1900.
+  for (const hunk of file.hunks) {
+    const used = new Set();
+    for (const r of hunk.removed) {
+      if (parseAssertion(r.text) || dataRow(r.text)) continue;
+      const before = inlineLists(r.text);
+      if (!before.lists.length) continue;
+      const a = hunk.added.find((x) => !used.has(x.line) && inlineLists(x.text).shape === before.shape);
+      if (!a) continue;
+      used.add(a.line);
+      const after = inlineLists(a.text);
+      before.lists.forEach((items, i) => {
+        const gone = dropped(items, after.lists[i]);
+        if (gone) out.dropped.push({ line: a.line, message: `${truncate(gone.join(', '), 40)} removed from a list in the test`, snippet: truncate(a.text) });
+      });
+    }
+  }
+
+  // Rows moved within their table: an order-sensitive test (sorting, dedupe, "first wins") now
+  // checks a different case, although every row is still there.
+  if (!file.oldLines || !file.newLines) return out;
+  const key = (text) => normalizeLine(text).replace(/,$/, '');
+  const rowLines = (lines) => lines.filter((l) => dataRow(l.text) && !parseAssertion(l.text));
+  const table = (lines, at) => {
+    let start = at - 1;
+    let end = at - 1;
+    while (start > 0 && dataRow(lines[start - 1])) start--;
+    while (end < lines.length - 1 && dataRow(lines[end + 1])) end++;
+    return lines.slice(start, end + 1).map(key);
+  };
+  const addedRows = rowLines(file.added);
+  for (const r of rowLines(file.removed)) {
+    const a = addedRows.find((x) => key(x.text) === key(r.text));
+    if (!a) continue;
+    const before = table(file.oldLines, r.line);
+    const after = table(file.newLines, a.line);
+    const sorted = (list) => [...list].sort().join('\n');
+    if (before.join('\n') !== after.join('\n') && sorted(before) === sorted(after)) {
+      out.changed.push({ line: a.line, message: `Test data reordered: ${truncate(key(r.text), 50)} moved within a test table`, snippet: truncate(a.text) });
+      break;
+    }
+  }
+  return out;
 }
 
 // ---------- rules ----------
@@ -376,9 +551,17 @@ export const testRules = [
     id: 'expected-changed',
     severity: 'medium',
     category: 'weakened-tests',
-    title: 'Expected value in a test changed',
+    title: 'Expected value or test data changed',
     hint: 'Confirm the new expectation is the correct behavior, not the current (buggy) output.',
     checkAll: (ctx) => ctx.assertionChanges.filter((c) => c.type === 'changed').map(toFinding),
+  },
+  {
+    id: 'test-data-removed',
+    severity: 'medium',
+    category: 'disabled-tests',
+    title: 'Case removed from a test table',
+    hint: 'Put the case back. If it was wrong, fix the expectation and say why.',
+    checkAll: (ctx) => ctx.testDiff.dropped.map(({ file, line, message, snippet }) => ({ file, line, message, snippet })),
   },
   {
     id: 'mocked-subject',
@@ -448,7 +631,7 @@ export function analyzeTests(ctx) {
     perFile.push({ file, removed, added, oldCount: [...oldNames.values()].reduce((s, e) => s + e.count, 0) });
   }
 
-  const result = { deletedFiles: [], removed: [], replaced: [], removedIn: new Set() };
+  const result = { deletedFiles: [], removed: [], replaced: [], dropped: [], removedIn: new Set() };
   // A test that disappears from one file but appears in another was moved, not removed.
   for (const entry of perFile) {
     entry.removed = entry.removed.filter(({ name }) => {
@@ -523,6 +706,14 @@ export function analyzeTests(ctx) {
         }
       }
     }
+  }
+
+  // Test data: cases dropped or reordered. Files that lost whole tests are already reported.
+  for (const file of testFiles(ctx)) {
+    if (file.status !== 'M' || result.removedIn.has(file.path)) continue;
+    const { dropped: gone, changed } = tableChanges(file);
+    for (const d of gone) result.dropped.push({ file, ...d });
+    for (const c of changed) changes.push({ file, type: 'changed', ...c });
   }
   ctx.assertionChanges = changes;
 }
