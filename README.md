@@ -46,7 +46,7 @@ Ask an agent to *"make the failing tests pass"* and sometimes it does exactly th
 -    expect(total(cart)).toBe(0.3);
 +    expect(total(cart)).toBeTruthy();
 
-+  if (coupon === 'SAVE10') return 108;     // the exact number the test expects
++  if (coupon === 'SAVE10') return 108;   // what the test expects
 
 -      - run: npm test
 +      - run: npm test || true
