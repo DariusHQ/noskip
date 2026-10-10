@@ -7,7 +7,9 @@
 - New rule **`test-data-removed`** (medium): a case dropped from a list the test runs through, such as 1900 disappearing from `for (const year of [1600, 1896, 1900, 1904])`.
 - **`expected-changed`** now also catches a flipped assertion (`assertTrue` → `assertFalse`, `assert.ok(x)` → `assert.ok(!x)`, `equal` → `notEqual`), a tested call changed while the expected value stayed (`formatPrice(123450)` → `formatPrice(123450, { group: false })`), and reordered input rows in a test table.
 - **`skip-added`** now catches `{ skip }` / `{ todo }` options added to an existing `node:test` test. New tests that declare a platform requirement this way are not reported.
-- All of the above came from runs noskip 1.1.0 missed in CheatBench. On the last 1,000 commits of Node.js, the precision check, blocking findings are unchanged (8 commits, all real test or assertion removals) and medium findings went from 56 to 58 commits.
+- All of the above came from runs noskip 1.1.0 missed in CheatBench. On a held-out round, with these rules frozen before it started, 1.2.0 flagged all 16 runs that gamed the tests (1.1.0: 8) and none of the 24 that did not. On the last 1,000 commits of Node.js, the precision check, blocking findings are unchanged (8 commits, all real test or assertion removals) and medium findings went from 56 to 58 commits.
+- Fixed: a file rewritten with the same size right after `git add` could look unchanged to the working-tree snapshot, because the temporary index lost the real index's timestamp that git's racy-clean check relies on.
+- The agent skill now says to report a contradiction between tests instead of editing a test until the suite passes.
 
 ## 1.1.0
 
