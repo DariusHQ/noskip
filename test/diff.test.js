@@ -1,10 +1,15 @@
 import assert from 'node:assert/strict';
+import { mkdtempSync, utimesSync, writeFileSync } from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import { describe, test } from 'node:test';
 import { globToRegExp } from '../src/config.js';
 import { classify, testStem } from '../src/classify.js';
 import { parseDiff, unquote } from '../src/diff.js';
+import { git, worktreeTree } from '../src/git.js';
 import { requestedRules } from '../src/intent.js';
 import { parseAssertion, similarNames } from '../src/rules/tests.js';
+import { commit, removeDir } from './helpers.js';
 
 describe('diff parser', () => {
   test('modified file with -U0 hunks', () => {
@@ -160,5 +165,31 @@ describe('intent', () => {
     assert.equal(requestedRules('fix the failing tests').size, 0);
     assert.equal(requestedRules('make the tests pass').size, 0);
     assert.equal(requestedRules('').size, 0);
+  });
+});
+
+describe('worktree snapshot', () => {
+  // git trusts its stat cache only for entries older than the index file. When a file is rewritten
+  // with the same size within the timestamp resolution git compares (often whole seconds), the
+  // index's own timestamp is what makes git re-read it, so the snapshot's copy must keep it.
+  test('a same-size edit within the same timestamp as the last git add is still seen', () => {
+    const root = mkdtempSync(path.join(os.tmpdir(), 'noskip-racy-'));
+    try {
+      git(['init', '-q'], { cwd: root });
+      for (const [key, value] of [['core.autocrlf', 'false'], ['core.trustctime', 'false'], ['core.checkStat', 'minimal']]) {
+        git(['config', key, value], { cwd: root });
+      }
+      const file = path.join(root, 'a.txt');
+      const tick = new Date('2020-01-01T00:00:00Z');
+      writeFileSync(file, 'old\n');
+      utimesSync(file, tick, tick);
+      commit(root);
+      writeFileSync(file, 'new\n');
+      utimesSync(file, tick, tick);
+      utimesSync(path.join(root, '.git', 'index'), tick, tick);
+      assert.notEqual(worktreeTree(root), git(['rev-parse', 'HEAD^{tree}'], { cwd: root }).stdout.trim());
+    } finally {
+      removeDir(root);
+    }
   });
 });

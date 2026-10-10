@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, rmSync, statSync, utimesSync } from 'node:fs';
 import path from 'node:path';
 
 export class GitError extends Error {}
@@ -102,7 +102,14 @@ export function worktreeTree(root) {
   const realIndex = gitPath(root, 'index');
   try {
     // Seeding from the real index keeps git's stat cache, so only changed files get re-hashed.
-    if (existsSync(realIndex)) copyFileSync(realIndex, tmpIndex);
+    // The copy keeps the index's own timestamp: git compares it with each file's mtime to spot
+    // "racily clean" entries, and a fresh timestamp would make a same-size edit made right after
+    // the last `git add` look unchanged.
+    if (existsSync(realIndex)) {
+      copyFileSync(realIndex, tmpIndex);
+      const { atime, mtime } = statSync(realIndex);
+      utimesSync(tmpIndex, atime, mtime);
+    }
     const env = { GIT_INDEX_FILE: tmpIndex };
     // --ignore-errors: an unreadable file (locked, permission denied) must not hide every other change.
     git(['add', '--all', '--ignore-errors', '--', '.'], { cwd: root, env, allowFail: true });
